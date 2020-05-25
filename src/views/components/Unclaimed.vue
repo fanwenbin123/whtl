@@ -8,7 +8,7 @@
 --> 
 <template>
   <div>
-    <van-sticky offset-top="84">
+    <van-sticky offset-top="82">
       <van-search v-model="searchVal" show-action placeholder="请输入搜索关键词">
         <template #action>
           <div @click="onSearch">搜索</div>
@@ -35,9 +35,17 @@
         <van-cell title="负责人" value="张三" />
       </van-cell-group>
     </van-list>
-    <van-dialog v-model="show" title="领取任务" @confirm='handlerConfirm' show-cancel-button>
-      <van-cell title="下发时间" value="2020-05-05 03:59:59" />
+    <van-dialog v-model="show" title="宿营车段修" @confirm='handlerConfirm' confirm-button-text="领取" show-cancel-button>
+      <van-cell title="车间" value="换一车间" />
+      <van-cell title="施工项目" value="宿营车段修" />
+      <van-cell title="作业地点" value="武昌客车车段" />
       <van-cell title="开始时间" value="2020-05-05 03:59:59" />
+      <van-cell title="结束时间" value="2020-05-05 03:59:59" />
+      <van-cell title="施工类别" value="轨道车站区调作业" />
+      <van-cell title="负责人" value="张三" />
+      <van-cell title="盯防干部" value="老王" />
+      <van-cell title="作业命令号" value="**********" />
+      <van-cell title="任务详情"  label="轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业轨道车站区调作业" />
   </van-dialog>
   </div>
 </template>
@@ -71,6 +79,9 @@ export default {
     },
     value: {
       type: String
+    },
+    currentTab: {
+      type: Number 
     }
   },
   data() {
@@ -94,7 +105,11 @@ export default {
       this.$emit('changeInput', this.searchVal)
     },
     handlerReceive() {
-      this.show = true
+      if(this.currentTab === 0){
+        this.show = true
+      }else{
+        this.$router.push({path:'/completedDetail',query: {id : 1}})
+      }
     },
     onLoad() {
       this.$emit("loadFun");

@@ -10,6 +10,18 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/CompletedDetail',
+      name: 'CompletedDetail',
+      component: () => import('@/views/completedDetail')
+      
+    },
+    {
+      path: '/Addinfo',
+      name: 'Addinfo',
+      component: () => import('@/views/components/Addinfo')
+      
     }
   ]
 })

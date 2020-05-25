@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-05-25 09:41:19
+ * @LastEditTime: 2020-05-25 10:19:13
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \whtl\src\utils\vant.js
+ */ 
 import Vue from 'vue'
 import { Dialog } from 'vant';
 import { Toast } from 'vant';
@@ -6,10 +14,8 @@ Vue.use(Toast);
 //注册全局组件
 import header from '@/components/layout/header'
 import footer from '@/components/layout/footer'
-import tab from '@/components/layout/tab'
 Vue.component('lg-header', header);
 Vue.component('lg-footer', footer);
-Vue.component('lg-tab', tab);
 
 //注册全局方法
 function dialogAlert(params,submit) {

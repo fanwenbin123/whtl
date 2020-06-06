@@ -76,8 +76,6 @@ export default {
                 Toast('密码输入有误')
                 return
             }
-            this.loading=true
-            this.zhud = true
             const { result } = await login({mobile: this.tel, password: this.password})       
             setToken(result.token)
             this.$router.push({ path:'/'})

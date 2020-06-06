@@ -22,6 +22,12 @@ export default new Router({
       name: 'Addinfo',
       component: () => import('@/views/components/Addinfo')
       
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login')
+      
     }
   ]
 })

@@ -23,7 +23,7 @@
     >
       <van-cell-group
         v-for="item in listData"
-        :key="item"
+        :key="item.grade"
         title="宿营车段修"
         :border="true"
         @click="handlerReceive"
@@ -31,7 +31,7 @@
         <van-cell title="下发时间" value="2020-05-05 03:59:59" />
         <van-cell title="开始时间" value="2020-05-05 03:59:59" />
         <van-cell title="结束时间" value="2020-05-05 03:59:59" />
-        <van-cell title="作业地点" value="卫家店基地" />
+        <van-cell title="作业地点" :value='item.task_location' />
         <van-cell title="负责人" value="张三" />
       </van-cell-group>
     </van-list>

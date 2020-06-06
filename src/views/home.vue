@@ -46,9 +46,10 @@
     Tabs,
     Sticky
   } from "vant";
-  import { login } from "@/api/index.js";
+  import { login,getIndex } from "@/api/index.js";
   import Unclaimed from "./components/Unclaimed";
   import Tasking from "./components/Tasking";
+  import { setToken, getToken } from '@/utils/cookies'
   export default {
     components: {
       [Toast.name]: Toast,
@@ -67,25 +68,30 @@
       return {
         keyword: "你会",
         num: 20,
-        list: [],
+        list: [], // 列表数据
         loading: false,
         finished: false,
         active: 0,
-        currentTab: 0  // 当前选中的Tab
+        currentTab: 0,  // 当前选中的Tab,
+        searchParames:{
+          type: 0,
+          token: getToken()
+        }
+      
       };
     },
     created() {
       if(this.$route.query.currentTab){
         this.active = this.$route.query.currentTab
       }
-      this.getLogin()
-      
+      if(!getToken()){
+        this.$router.push({path:'/login'})
+      }else{
+        // 获取首页数据
+        this.getIndexData()
+      }
     },
     methods: {
-      async getLogin() {
-       const {data} = await login({mobile:'13048973235', password: '123456'})
-       console.log(data)
-      },
       tabChange(index, title) {
         this.num = (index + 1) * 20; 
       },
@@ -127,6 +133,12 @@
             this.finished = true;
           }
         }, 1000);
+      },
+      //  获取首页数据
+      async getIndexData() {
+        const { result} = await getIndex(this.searchParames)
+         console.log(result)
+         this.list = result
       }
     }
   };

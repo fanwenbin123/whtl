@@ -2,7 +2,7 @@ import axios from 'axios';
 
 var instance = axios.create({
     headers:{
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
     },
     timeout: 30000,
     baseURL: '', 

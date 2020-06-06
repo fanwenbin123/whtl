@@ -46,7 +46,7 @@
     Tabs,
     Sticky
   } from "vant";
-  import { getIndex } from "@/api/index.js";
+  import { login } from "@/api/index.js";
   import Unclaimed from "./components/Unclaimed";
   import Tasking from "./components/Tasking";
   export default {
@@ -78,10 +78,14 @@
       if(this.$route.query.currentTab){
         this.active = this.$route.query.currentTab
       }
-      getIndex({ data: 1 }).then(res => { });
+      this.getLogin()
       
     },
     methods: {
+      async getLogin() {
+       const {data} = await login({mobile:'13048973235', password: '123456'})
+       console.log(data)
+      },
       tabChange(index, title) {
         this.num = (index + 1) * 20; 
       },

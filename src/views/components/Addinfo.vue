@@ -85,7 +85,9 @@ export default {
         }
         },{enableHighAccuracy: true})
       },
+      
     submit () {
+      console.log(this.fileList)
         this.$router.push({path:'/',query:{currentTab:1}})
     }
    },

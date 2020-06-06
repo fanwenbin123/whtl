@@ -89,9 +89,6 @@
       
     },
     methods: {
-      tabChange(index, title) {
-        this.num = (index + 1) * 20; 
-      },
       onRefresh(done) {
         setTimeout(() => {
           done();
@@ -111,8 +108,11 @@
         Toast("领取任务！");
       },
       // tab 改变事件
-      changeTab(val) {
-        this.currentTab = val
+      changeTab(index,title) {
+        console.log(index,title)
+        this.searchParames.type = index
+        this.currentTab = index
+        this.getIndexData();
       },
       onLoad() {
         this.loading = true

@@ -61,11 +61,6 @@ export default {
             }
         }
     },
-    created() {
-        if(getToken()){
-            //this.$router.push({ path: '/' })
-        }
-    },
     methods: {
        async login () {
             if (this.tel === '' || this.usertel === '手机号码格式错误') {

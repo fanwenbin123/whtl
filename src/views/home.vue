@@ -84,12 +84,9 @@
       if(this.$route.query.currentTab){
         this.active = this.$route.query.currentTab
       }
-      if(!getToken()){
-        this.$router.push({path:'/login'})
-      }else{
-        // 获取首页数据
-        this.getIndexData()
-      }
+      // 获取首页数据
+      this.getIndexData()
+      
     },
     methods: {
       tabChange(index, title) {

@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog } from "vant";
+  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog,Divider } from "vant";
   import { formatTime } from '@/utils/index'
   import { receiveTask } from "@/api";
   import { setToken, getToken } from '@/utils/cookies'
@@ -56,6 +56,7 @@
       [Tab.name]: Tab,
       [Tabs.name]: Tabs,
       [Sticky.name]: Sticky,
+      [Divider.name]: Divider,
       [Dialog.Component.name]: Dialog.Component
     },
 
@@ -98,8 +99,7 @@
       },
       // 搜索事件
       onSearch() {
-        this.$emit('input', this.searchVal)
-        this.$emit('changeInput', this.searchVal)
+        this.$emit('search',this.searchVal)
       },
       handlerReceive(item) {
         if (this.currentTab === 0) {
@@ -142,3 +142,9 @@
     }
   };
 </script>
+<style lang="scss">
+  .van-hairline--top-bottom{
+    border-bottom: 1px solid #0079fe;
+    box-shadow:5px 5px 5px #cccccc;
+  }
+</style>

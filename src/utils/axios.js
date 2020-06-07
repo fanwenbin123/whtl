@@ -56,6 +56,8 @@ service.interceptors.response.use(response => {
     return Promise.resolve(response.data)
   }else if(res.status === 9999){
     removeToken()
+    location.href = '/#/login'
+    
     Toast({
       message: res.msg,
       type: 'fail',

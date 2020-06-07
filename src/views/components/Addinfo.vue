@@ -44,6 +44,7 @@ export default {
        return{
         remark: '',
         title: '',
+        id:'',
         fileList:[],
         fileImageList:[], // 提交到后端的图片数据
         center: { lng: 0, lat: 0 },
@@ -54,6 +55,7 @@ export default {
    },
    created() {
        this.title = this.$route.query.title
+       this.id = this.$route.query.id
    },
    methods: {
     handler ({BMap, map}) {
@@ -131,12 +133,17 @@ export default {
       
     submit () {
       getSyscode({
+        id: this.id,
         remark: this.remark,
         point: this.point,
         address: this.address,
         imageList: this.fileImageList
         }).then(res => {
           console.log(res,'res')
+          Toast({
+            message: res.msg,
+            duration: 2000,
+          })
         })
      //   this.$router.push({path:'/',query:{currentTab:1}})
     }

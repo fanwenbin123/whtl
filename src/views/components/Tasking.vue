@@ -2,8 +2,7 @@
     <div>
         <lg-header :leftArrow="true" :titleType="1" :title="title" rightText='临时申请出站' @on-click-right='rightClick'>
         </lg-header>
-        <van-cell-group class="wrapper" :title="detailData.type" :border="true"
-            style="margin-top: 20px;">
+        <van-cell-group class="wrapper" :title="detailData.type" :border="true" style="margin-top: 20px;">
             <van-cell title="车间" :value="detailData.grade_num" />
             <van-cell title="施工项目" :value="detailData.type" />
             <van-cell title="作业地点" :value="detailData.task_location" />
@@ -12,7 +11,7 @@
             <van-cell title="施工类别" :value="detailData.main_task" />
             <van-cell title="负责人" :value="detailData.main_peason" />
             <van-cell title="盯防干部" :value="detailData.see_peason" />
-            <van-cell title="作业命令号" value="**********" />
+            <van-cell title="作业命令号" :value="detailData.sys_code"  v-if="detailData.status>2" :value-class='detailData.status>2?"red":""' />
             <van-cell title="任务详情" :label="detailData.main_task" />
         </van-cell-group>
         <van-button class="applicant" type="info" size="large" @click='applicant'>申请系统作业号</van-button>
@@ -75,10 +74,10 @@
         },
         methods: {
             rightClick() {
-                this.$router.push({ path: '/AddInfo', query: { title: '作业前三分钟安全教育' } })
+                this.$router.push({ path: '/AddInfo', query: { title: this.title, id: this.id } })
             },
             applicant() {
-                this.$router.push({ path: '/AddInfo', query: { title: '作业前三分钟安全教育' } })
+                this.$router.push({ path: '/AddInfo', query: { title: this.title, id: this.id } })
             },
             async getDetailInfo(id) {
                 const { result } = await getTaskDetail({ id })
@@ -88,8 +87,11 @@
     }
 </script>
 <style lang="scss" scoped>
-    .applicant{
+    .applicant {
         position: fixed;
         bottom: 0px;
+    }
+    .red{
+        color: red;
     }
 </style>

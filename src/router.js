@@ -19,6 +19,11 @@ const router =  new Router({
       
     },
     {
+      path: '/taskingDetail',
+      name: 'taskingDetail',
+      component: () => import('@/views/components/Tasking')
+    },
+    {
       path: '/Addinfo',
       name: 'Addinfo',
       component: () => import('@/views/components/Addinfo')
@@ -28,8 +33,8 @@ const router =  new Router({
       path: '/login',
       name: 'login',
       component: () => import('@/views/login')
-      
     }
+
   ]
 })
 

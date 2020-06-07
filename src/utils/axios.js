@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Toast } from 'vant'
 import { getToken } from '@/utils/cookies'
+import qs from  'qs'
 const service = axios.create({
   // 设置超时时间
   timeout: 10 * 1000,
@@ -21,6 +22,12 @@ service.interceptors.request.use(config => {
    * 1.可以在接口处定义 options 为 openLoading
    * 2.method 为put、post、delete才会有加载动画
    */
+  if(config.method === 'post') {
+     config.data.token = TOKEN
+     config.data = qs.stringify(config.data)
+  }else{
+    config.params.token = TOKEN
+  }
   const isOpen = /^(post)|(put)|(delete)$/i.test(config.method) || config.options === 'openLoading'
   if (isOpen) {
     Toast.loading({

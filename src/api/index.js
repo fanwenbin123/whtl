@@ -7,14 +7,14 @@ export const login = (data) => {
     return request({
          url: `${BaseUrl}/api.php/base/login`,
          method:'post',
-         data :qs.stringify(data)
+         data
     })
 }
 export const checkToken = (data) => {
     return request({
         url: `${BaseUrl}/api.php/base/check_user_token`,
         method:'post',
-        data :qs.stringify(data)
+        data
    })
 }
 // 获取列表数据

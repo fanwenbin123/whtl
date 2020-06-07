@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Toast } from 'vant'
-import { getToken } from '@/utils/cookies'
+import { getToken,removeToken } from '@/utils/cookies'
 import qs from  'qs'
 const service = axios.create({
   // 设置超时时间
@@ -54,6 +54,13 @@ service.interceptors.response.use(response => {
   const res = response.data
   if (res.status === 1) {
     return Promise.resolve(response.data)
+  }else if(res.status === 9999){
+    removeToken()
+    Toast({
+      message: res.msg,
+      type: 'fail',
+      duration: 2000,
+    })
   } else {
     Toast({
       message: res.msg,

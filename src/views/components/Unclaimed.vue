@@ -27,7 +27,7 @@
     </van-list>
     <van-dialog v-model="show" :title="detailInfo.type" @confirm='handlerConfirm(detailInfo.id)'
       confirm-button-text="领取" show-cancel-button>
-      <van-cell title="车间" :value="detailInfo.grade" />
+      <van-cell title="车间" :value="detailInfo.grade_num" />
       <van-cell title="施工项目" :value='detailInfo.type' />
       <van-cell title="作业地点" :value='detailInfo.task_location' />
       <van-cell title="开始时间" :value='formatTime(detailInfo.task_start_time)' />

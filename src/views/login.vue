@@ -13,7 +13,6 @@
                  type="password"
                  placeholder="请输入密码(默认手机号码后6位)"
                  :error-message="pass"
-                
                  clearable
              />
               <van-button type="primary" :loading="loading" loading-text="登录..." size="large" color="#0079fe" :disabled="zhud" @click="login">登录</van-button>

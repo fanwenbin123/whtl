@@ -14,7 +14,7 @@
             <van-cell title="作业命令号" :value="detailData.sys_code"  v-if="detailData.status>2" :value-class='detailData.status>2?"red":""' />
             <van-cell title="任务详情" :label="detailData.main_task" />
         </van-cell-group>
-        <van-button class="applicant" type="info" size="large" @click='applicant'>申请系统作业号</van-button>
+        <van-button class="applicant" type="info" size="large" @click='applicant'>{{ detailData.status | getText }}</van-button>
         <!-- <van-steps direction="vertical" :active="1">
         <van-step>
           <h3><van-button type="info" size="large" @click='addPlace'>添加干部到位</van-button></h3>
@@ -84,6 +84,15 @@
                 this.detailData = result
             }
         },
+        filters: {
+            getText(val){
+                if(val> 2){
+                    return '提交任务'
+                }else{
+                    return '申请系统作业号'
+                }
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

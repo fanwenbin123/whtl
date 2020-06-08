@@ -5,18 +5,18 @@
       <van-tabs type="card" v-model="active" background="white" title-active-color="#fff" title-inactive-color="#0079fe"
         color="#0079fe" offset-top="50" sticky @change='changeTab'>
         <van-tab title="未领取">
-          <unclaimed v-model="searchParames.key" @loadFun="onLoad" @del='del' @search='search' :loading="loading"
+          <unclaimed v-model="keyword1" @loadFun="onLoad" @del='del' @search='search' :loading="loading"
             :finished="finished" :listData="list" :currentTab="currentTab">
           </unclaimed>
         </van-tab>
         <van-tab title="进行中">
-          <unclaimed v-model="searchParames.key" @loadFun="onLoad" @search='search' :loading="loading"
+          <unclaimed v-model="keyword2" @loadFun="onLoad" @search='search' :loading="loading"
             :finished="completeFinishing" :listData=" ongoingList" :currentTab="currentTab">
           </unclaimed>
           <!-- <Tasking></Tasking> -->
         </van-tab>
         <van-tab title="已完成">
-          <unclaimed v-model="searchParames.key" @loadFun="onLoad" @search='search' :loading="loading"
+          <unclaimed v-model="keyword3" @loadFun="onLoad" @search='search' :loading="loading"
             :finished="completeFinished" :listData="completeList" :currentTab="currentTab">
           </unclaimed>
         </van-tab>
@@ -61,11 +61,13 @@
         list: [], // 未领取列表数据
         ongoingList: [], // 进行中列表数据
         completeList: [], // 已完成数据
+        keyword1:'',
+        keyword2:'',
+        keyword3:'',
         loading: false,
         finished: false,
         completeFinishing: false,
         completeFinished: false,
-
         active: 0,
         currentTab: 0,  // 当前选中的Tab,
         searchParames: {
@@ -154,11 +156,12 @@
         this.list.splice(this.list.findIndex(item => item.id === id), 1)
       },
       search(val) {
-        this.searchParames.key = val
+        this.searchParames.page = 1
         if (this.currentTab === 0) {
+          this.searchParames.key = val
           this.list.length = 0
         } else if (this.currentTab === 1) {
-          this.ongoingList.length === 0
+          this.ongoingList.length = 0
         } else {
           this.completeList.length = 0
         }

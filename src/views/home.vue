@@ -158,13 +158,13 @@
       search(val) {
         this.searchParames.page = 1
         if (this.currentTab === 0) {
-          this.searchParames.key = val
           this.list.length = 0
         } else if (this.currentTab === 1) {
           this.ongoingList.length = 0
         } else {
           this.completeList.length = 0
         }
+        this.searchParames.key = val
         this.getIndexData()
       }
     }

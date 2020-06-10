@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class=wrapper>
     <lg-header :leftArrow="false" :titleType="1" title="任务管理"></lg-header>
     <div class="content">
       <van-tabs type="card" v-model="active" background="white" title-active-color="#fff" title-inactive-color="#0079fe"
@@ -171,11 +171,17 @@
   };
 </script>
 <style lang="scss">
-  .van-tabs__nav--card {
+  .wrapper{
+    .van-cell{
+      padding: 5px 10px;
+    }
+    .van-tabs__nav--card {
     margin: 0px;
   }
   .list {
     height: 100%;
     padding-top: 46px;
   }
+  }
+  
 </style>

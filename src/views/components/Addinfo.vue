@@ -1,6 +1,5 @@
 <template>
     <div class="content">
-        <lg-header :leftArrow="true" :titleType="1" :title='title'></lg-header>
         <van-field
             v-model="remark"
             rows="2"

@@ -62,7 +62,7 @@ export default {
     },
     created() {
         if(getToken()){
-            this.$router.push({ path:'/' })
+           this.$router.push({ path:'/' })
         }
     },
     methods: {
@@ -77,7 +77,7 @@ export default {
             }
             const { result } = await login({mobile: this.tel, password: this.password})       
             setToken(result.token)
-            this.$router.push({ path:'/'})
+            this.$router.push({ path:'/home'})
         },
      
     }

@@ -3,7 +3,7 @@
     <lg-header :leftArrow="false" :titleType="1" title="任务管理"></lg-header>
     <div class="content">
       <van-tabs type="card" v-model="active" background="white" title-active-color="#fff" title-inactive-color="#0079fe"
-        color="#0079fe" offset-top="50" sticky @change='changeTab'>
+        color="#0079fe" offset-top="51" sticky @change='changeTab'>
         <van-tab title="未领取">
           <unclaimed v-model="keyword1" @loadFun="onLoad" @del='del' @search='search' :loading="loading"
             :finished="finished" :listData="list" :currentTab="currentTab">
@@ -16,6 +16,11 @@
           <!-- <Tasking></Tasking> -->
         </van-tab>
         <van-tab title="已完成">
+          <unclaimed v-model="keyword3" @loadFun="onLoad" @search='search' :loading="loading"
+            :finished="completeFinished" :listData="completeList" :currentTab="currentTab">
+          </unclaimed>
+        </van-tab>
+        <van-tab title="全部">
           <unclaimed v-model="keyword3" @loadFun="onLoad" @search='search' :loading="loading"
             :finished="completeFinished" :listData="completeList" :currentTab="currentTab">
           </unclaimed>
@@ -176,12 +181,12 @@
       padding: 5px 10px;
     }
     .van-tabs__nav--card {
-    margin: 0px;
-  }
-  .list {
-    height: 100%;
-    padding-top: 46px;
-  }
+      margin: 0px;
+    }
+    .list {
+      height: 100%;
+      padding-top: 46px;
+    }
   }
   
 </style>

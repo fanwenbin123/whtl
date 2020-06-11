@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="content tasking">
         <lg-header :leftArrow="true" :titleType="1" :title="title" rightText='临时申请出站' @on-click-right='rightClick'>
         </lg-header>
-        <van-cell-group class="wrapper" :title="detailData.type" :border="true" style="margin-top: 20px;">
+        <van-cell-group class="wrapper" :title="detailData.type" :border="true">
             <van-cell title="车间" :value="detailData.grade_num" />
             <van-cell title="施工项目" :value="detailData.type" />
             <van-cell title="作业地点" :value="detailData.task_location" />

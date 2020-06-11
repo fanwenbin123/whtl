@@ -8,7 +8,7 @@
 -->
 <template>
   <div>
-    <van-sticky offset-top="82">
+    <van-sticky offset-top="84">
       <van-search v-model="searchVal" show-action placeholder="请输入搜索关键词">
         <template #action>
           <div @click="onSearch">搜索</div>
@@ -23,6 +23,15 @@
         <van-cell title="结束时间" :value='formatTime(item.task_end_time)' />
         <van-cell title="作业地点" :value='item.task_location' />
         <van-cell title="负责人" :value='item.main_peason' />
+        <van-cell title="操作" v-if="currentTab===1">
+          <template #right-icon>
+            <div class="operation">
+              <van-button type="primary" size="small">申请入网</van-button>
+              <van-button type="primary" size="small">整改措施</van-button>
+              <van-button type="primary" size="small">评价</van-button>
+            </div>
+          </template>
+        </van-cell>
       </van-cell-group>
     </van-list>
     <van-dialog v-model="show" :title="detailInfo.type" @confirm='handlerConfirm(detailInfo.id)'
@@ -41,7 +50,7 @@
   </div>
 </template>
 <script>
-  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog,Divider } from "vant";
+  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog,Button } from "vant";
   import { formatTime } from '@/utils/index'
   import { receiveTask } from "@/api";
   import { setToken, getToken } from '@/utils/cookies'
@@ -56,7 +65,7 @@
       [Tab.name]: Tab,
       [Tabs.name]: Tabs,
       [Sticky.name]: Sticky,
-      [Divider.name]: Divider,
+      [Button.name]: Button,
       [Dialog.Component.name]: Dialog.Component
     },
 
@@ -144,7 +153,12 @@
 </script>
 <style lang="scss">
   .van-hairline--top-bottom{
-    border-bottom: 1px solid #0079fe;
+    
     box-shadow:5px 5px 5px #cccccc;
+  }
+  .operation{
+    button{
+      margin-left:10px;
+    }
   }
 </style>

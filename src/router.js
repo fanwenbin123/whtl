@@ -2,37 +2,88 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { getToken } from '@/utils/cookies'
 import Home from './views/home.vue'
+import Dashboard from './views/dashboard/Dashboard.vue'
 
 Vue.use(Router)
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 const router =  new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      redirect: '/home',
     },
     {
-      path: '/CompletedDetail',
-      name: 'CompletedDetail',
-      component: () => import('@/views/completedDetail')
-      
+      path: '/dashboard',
+      component: Dashboard,
+      children:[
+        {
+          path: '/home',
+          name: 'home',
+          component:Home,
+          meta:{
+            title:'任务管理'
+          }
+        },
+        {
+          path: '/help',
+          name: 'help',
+          component: () => import('@/views/help'),
+          meta:{
+            title:'帮助'
+          }
+        },
+        {
+          path: '/report',
+          name: 'report',
+          component: () => import('@/views/report'),
+          meta:{
+            title:'上报'
+          }
+        },
+        {
+          path: '/set',
+          name: 'set',
+          component: () => import('@/views/set'),
+          meta:{
+            title:'设置'
+          }
+        },
+        {
+          path: '/CompletedDetail',
+          name: 'CompletedDetail',
+          component: () => import('@/views/completedDetail'),
+          leftArrow: true
+          
+        },
+        {
+          path: '/taskingDetail',
+          name: 'taskingDetail',
+          component: () => import('@/views/components/Tasking'),
+          leftArrow: true
+        },
+        {
+          path: '/Addinfo',
+          name: 'Addinfo',
+          component: () => import('@/views/components/Addinfo'),
+          meta:{
+            leftArrow: true
+          }
+          
+        },
+      ]
     },
-    {
-      path: '/taskingDetail',
-      name: 'taskingDetail',
-      component: () => import('@/views/components/Tasking')
-    },
-    {
-      path: '/Addinfo',
-      name: 'Addinfo',
-      component: () => import('@/views/components/Addinfo')
-      
-    },
+
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/login')
+      component: () => import('@/views/login'),
+      meta:{
+        noFooter: true
+      }
     }
 
   ]

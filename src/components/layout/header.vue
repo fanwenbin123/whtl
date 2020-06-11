@@ -82,7 +82,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.van-nav-bar__left{
+/* .van-nav-bar__left{
     left: 0;
     .van-nav-bar__arrow{
         min-width: 1rem;
@@ -93,5 +93,5 @@ export default {
         font-size: 20px;
         color: #666;
     }
-}
+} */
 </style>

@@ -1,13 +1,14 @@
 <template>
     <van-tabbar 
         v-model="active" 
-        active-color="#07c160"
+        active-color="#0079fe"
         @change="tabClick"
+        route
     >
-        <van-tabbar-item icon="home-o" replace>标签</van-tabbar-item>
-        <van-tabbar-item icon="search">标签</van-tabbar-item>
-        <van-tabbar-item icon="friends-o">按钮</van-tabbar-item>
-        <van-tabbar-item icon="setting-o">标签</van-tabbar-item>
+        <van-tabbar-item icon="home-o" to='/home' >任务</van-tabbar-item>
+        <van-tabbar-item icon="add-o" to='/report'>上报</van-tabbar-item>
+        <van-tabbar-item icon="friends-o"  to='/help'>帮助</van-tabbar-item>
+        <van-tabbar-item icon="setting-o" to='/set'>设置</van-tabbar-item>
     </van-tabbar>
 </template>
 
@@ -31,7 +32,7 @@ export default {
     },
     methods:{
         tabClick(key){
-            
+            this.$emit('tabfooterClick')
         }
     },
 }

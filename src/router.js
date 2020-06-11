@@ -25,7 +25,8 @@ const router =  new Router({
           name: 'home',
           component:Home,
           meta:{
-            title:'任务管理'
+            title:'任务管理',
+            leftArrow: false
           }
         },
         {
@@ -33,7 +34,8 @@ const router =  new Router({
           name: 'help',
           component: () => import('@/views/help'),
           meta:{
-            title:'帮助'
+            title:'帮助',
+            leftArrow: false
           }
         },
         {
@@ -41,7 +43,8 @@ const router =  new Router({
           name: 'report',
           component: () => import('@/views/report'),
           meta:{
-            title:'上报'
+            title:'上报',
+            leftArrow: false
           }
         },
         {
@@ -49,7 +52,8 @@ const router =  new Router({
           name: 'set',
           component: () => import('@/views/set'),
           meta:{
-            title:'设置'
+            title:'设置',
+            leftArrow: false
           }
         },
         {

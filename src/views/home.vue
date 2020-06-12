@@ -1,6 +1,5 @@
 <template>
-  <div class=wrapper>
-    <lg-header :leftArrow="false" :titleType="1" title="任务管理"></lg-header>
+  <div class="wrapper">
     <div class="content">
       <van-tabs type="card" v-model="active" background="white" title-active-color="#fff" title-inactive-color="#0079fe"
         color="#0079fe" offset-top="51" sticky @change='changeTab'>
@@ -177,6 +176,9 @@
 </script>
 <style lang="scss">
   .wrapper{
+    .van-hairline--top-bottom{
+    box-shadow:5px 5px 5px #cccccc;
+  }
     .van-cell{
       padding: 5px 10px;
     }

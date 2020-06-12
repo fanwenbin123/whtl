@@ -152,10 +152,6 @@
   };
 </script>
 <style lang="scss">
-  .van-hairline--top-bottom{
-    
-    box-shadow:5px 5px 5px #cccccc;
-  }
   .operation{
     button{
       margin-left:10px;

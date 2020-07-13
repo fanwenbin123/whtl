@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import '@/assets/scss/index.scss'
 import '@/utils/vant'
+import store from './store'
 //import vConsole from './vconsole.js'
 
 
@@ -12,8 +13,9 @@ FastClick.attach(document.body)
 import VueScroller from 'vue-scroller'
 Vue.use(VueScroller)
 Vue.config.productionTip = false
-
+Vue.prototype.$EventBus = new Vue()
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

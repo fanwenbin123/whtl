@@ -1,47 +1,46 @@
 <template>
     <div class='content'>
-        <van-search v-model="value" placeholder="请输入搜索关键词" />
-        <van-collapse v-model="activeName" accordion>
-            <van-collapse-item v-for="(item, index) in helpList" :key="index" :title="item.question" :name="index">{{item.answer}}</van-collapse-item>
+        <van-search v-model="value" placeholder="请输入搜索关键词" @input='changeSearch' />
+        <van-collapse v-model="activeName" v-if="helpList.length> 0" accordion>
+            <van-collapse-item v-for="(item, index) in helpList" :key="index" :title="item.title" :name="index">
+                <div v-html='item.content'></div>
+            </van-collapse-item>
         </van-collapse>
+        <van-empty v-else description="无数据" />
     </div>
 </template>
 <script>
-    import { Collapse, CollapseItem, Search } from "vant";
+    import { Collapse, CollapseItem, Search, Empty } from "vant";
+    import { getHelpContent } from "@/api/index.js";
     export default {
         name: 'help',
         components: {
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Search.name]: Search,
+            [Empty.name]: Empty
         },
         data() {
             return {
                 activeName: '0',
                 value: '',
-                helpList: [
-                    {
-                        question: '忘记密码怎么办？',
-                        answer: ' 请联系管理员处理请联系管理员处理请联系管理员处理请联系管理员处理请联系管理员处理请联系管理员处理请联系管理员处理'
-                    },
-                    {
-                        question: '如何使用这个系统？',
-                        answer: ' 在手机端输入相应的网址就可以了'
-                    },
-                    {
-                        question: '如何使用这个系统？',
-                        answer: ' 在手机端输入相应的网址就可以了'
-                    },
-                    {
-                        question: '忘记密码怎么办？',
-                        answer: ' 请联系管理员处理'
-                    }
-                ]
+                helpList: [],
+                helpList1: []
             }
         },
         created() {
-
+            this.getHelpList()
         },
+        methods: {
+            async getHelpList() {
+                const { result } = await getHelpContent()
+                this.helpList = result.data
+                this.helpList1 = result.data
+            },
+            changeSearch(keyword) {
+                this.helpList = this.helpList1.filter(item => item.title.includes(keyword))
 
+            }
+        },
     }
 </script>

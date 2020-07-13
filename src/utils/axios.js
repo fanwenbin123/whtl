@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Toast } from 'vant'
-import { getToken,removeToken } from '@/utils/cookies'
-import qs from  'qs'
+import { getToken, removeToken } from '@/utils/cookies'
+import qs from 'qs'
 const service = axios.create({
   // 设置超时时间
   timeout: 10 * 1000,
@@ -22,14 +22,16 @@ service.interceptors.request.use(config => {
    * 1.可以在接口处定义 options 为 openLoading
    * 2.method 为put、post、delete才会有加载动画
    */
-  if(config.method === 'post') {
-     config.data.token = TOKEN
-     config.data = qs.stringify(config.data)
-  }else{
+  if (config.method === 'post') {
+    config.data = config.data || {}
+    config.data.token = TOKEN
+    config.data = qs.stringify(config.data)
+  } else {
     config.params.token = TOKEN
   }
+
   const isOpen = /^(post)|(put)|(delete)$/i.test(config.method) || config.options === 'openLoading'
-  if (isOpen) {
+  if (isOpen && !qs.parse(config.data)['noLoading']) {
     Toast.loading({
       message: '数据请求中...',
       forbidClick: true,
@@ -38,7 +40,7 @@ service.interceptors.request.use(config => {
       duration: 0
     })
   } else {
-    
+
   }
   return config
 }, (error) => {
@@ -54,10 +56,10 @@ service.interceptors.response.use(response => {
   const res = response.data
   if (res.status === 1) {
     return Promise.resolve(response.data)
-  }else if(res.status === 9999){
+  } else if (res.status === 9999) {
     removeToken()
     location.href = '/#/login'
-    
+
     Toast({
       message: res.msg,
       type: 'fail',
@@ -68,7 +70,7 @@ service.interceptors.response.use(response => {
       message: res.msg,
       type: 'fail',
       duration: 2000,
-      onClose () { // 错误回退至上级页面
+      onClose() { // 错误回退至上级页面
         // router.go(-1)
       }
     })
@@ -89,7 +91,7 @@ service.interceptors.response.use(response => {
     }
     return
   }
-  
+
   return Promise.reject(error)
 })
 

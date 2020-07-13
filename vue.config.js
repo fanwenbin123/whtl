@@ -1,21 +1,21 @@
 module.exports = {
   publicPath: './',
-  outputDir:'dist',
-  assetsDir:'assets',
-  lintOnSave:false,
-  runtimeCompiler:false,
-  productionSourceMap:false,
-  devServer: {
-    hot: true,
-    // 设置端口
-    port: 8080,
-    https: false,
-    hotOnly: false,
-    overlay: {
-      warnings: true,
-      errors: true
-    }
-  },
+  outputDir: 'dist',
+  assetsDir: 'assets',
+  lintOnSave: false,
+  runtimeCompiler: false,
+  productionSourceMap: false,
+  // devServer: {
+  //   hot: true,
+  //   // 设置端口
+  //   port: 8080,
+  //   https: false,
+  //   hotOnly: false,
+  //   overlay: {
+  //     warnings: true,
+  //     errors: true
+  //   }
+  // },
 
   // configureWebpack: {
   //   devServer: {
@@ -29,7 +29,7 @@ module.exports = {
   //             }
   //           }
   //       }
-  
+
   //     }
   // }
 }

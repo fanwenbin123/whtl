@@ -1,2 +1,3 @@
- const BaseUrl = 'http://119.96.152.198:39001'
+const BaseUrl = 'http://t.lssdkc.com'
+
 export default BaseUrl

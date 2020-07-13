@@ -10,7 +10,8 @@ Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-const router =  new Router({
+const router = new Router({
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -19,22 +20,23 @@ const router =  new Router({
     {
       path: '/dashboard',
       component: Dashboard,
-      children:[
+      children: [
         {
           path: '/home',
           name: 'home',
-          component:Home,
-          meta:{
-            title:'任务管理',
-            leftArrow: false
+          component: Home,
+          meta: {
+            title: '任务管理',
+            leftArrow: false,
+            rightType: true
           }
         },
         {
           path: '/help',
           name: 'help',
           component: () => import('@/views/help'),
-          meta:{
-            title:'帮助',
+          meta: {
+            title: '帮助',
             leftArrow: false
           }
         },
@@ -42,17 +44,17 @@ const router =  new Router({
           path: '/report',
           name: 'report',
           component: () => import('@/views/report'),
-          meta:{
-            title:'上报',
-            leftArrow: false
+          meta: {
+            title: '上报',
+            leftArrow: false,
           }
         },
         {
           path: '/set',
           name: 'set',
           component: () => import('@/views/set'),
-          meta:{
-            title:'设置',
+          meta: {
+            title: '设置',
             leftArrow: false
           }
         },
@@ -61,7 +63,7 @@ const router =  new Router({
           name: 'CompletedDetail',
           component: () => import('@/views/completedDetail'),
           leftArrow: true
-          
+
         },
         {
           path: '/taskingDetail',
@@ -73,10 +75,10 @@ const router =  new Router({
           path: '/Addinfo',
           name: 'Addinfo',
           component: () => import('@/views/components/Addinfo'),
-          meta:{
+          meta: {
             leftArrow: true
           }
-          
+
         },
       ]
     },
@@ -85,7 +87,7 @@ const router =  new Router({
       path: '/login',
       name: 'login',
       component: () => import('@/views/login'),
-      meta:{
+      meta: {
         noFooter: true
       }
     }
@@ -104,7 +106,7 @@ router.beforeEach(async (to, from, next) => {
   // 开发环境下, 不做路由管制
   //if (process.env.NODE_ENV === 'development') return next()
   // 生产环境下, 不在权限内的路由禁止跳转
- // if (!(to.path in map) && from.path in map) return next(from.path)
+  // if (!(to.path in map) && from.path in map) return next(from.path)
   next()
 })
 export default router

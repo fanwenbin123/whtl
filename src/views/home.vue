@@ -20,11 +20,13 @@
           </unclaimed>
         </van-tab>
         <van-tab title="全部">
-          <unclaimed v-model="keyword3" @loadFun="onLoad" @search='search' :loading="loading"
-            :finished="completeFinished" :listData="completeList" :currentTab="currentTab">
+          <unclaimed v-model="keyword4" @loadFun="onLoad" @search='search' :loading="loading"
+            :finished="completeFinisheAll" :listData="allList" :currentTab="currentTab">
           </unclaimed>
         </van-tab>
       </van-tabs>
+
+
     </div>
   </div>
 </template>
@@ -41,7 +43,8 @@
     Tabs,
     Sticky
   } from "vant";
-  import { getIndex } from "@/api/index.js";
+  import { getIndex, getUnreadMessage } from "@/api/index.js";
+  import mp3 from "@/assets/850850.mp3";
   import Unclaimed from "./components/Unclaimed";
   import Tasking from "./components/Tasking";
   import { setToken, getToken } from '@/utils/cookies'
@@ -61,17 +64,21 @@
     },
     data() {
       return {
+        mp3,
         num: 20,
         list: [], // 未领取列表数据
         ongoingList: [], // 进行中列表数据
         completeList: [], // 已完成数据
-        keyword1:'',
-        keyword2:'',
-        keyword3:'',
+        allList: [], // 全部消息
+        keyword1: '',
+        keyword2: '',
+        keyword3: '',
+        keyword4: '',
         loading: false,
         finished: false,
         completeFinishing: false,
         completeFinished: false,
+        completeFinisheAll: false,
         active: 0,
         currentTab: 0,  // 当前选中的Tab,
         searchParames: {
@@ -79,19 +86,34 @@
           type: 0,
           page: 0,
           token: getToken()
-        }
+        },
+        timer: '',  // 定时器
+        newNum: 0  //未读消息数量
 
       };
+    },
+    computed: {
+      isChangeMsgNum() {
+        return this.$store.state.newMsgNum
+      }
     },
     watch: {
       currentTab(val) {
         this.searchParames.page = 0
+      },
+      isChangeMsgNum() {
+        let audio = new Audio()
+        audio.src = this.mp3
+        audio.play();
       }
+
     },
+
     created() {
       if (this.$route.query.currentTab) {
         this.active = this.$route.query.currentTab
       }
+      this.getUnreadMessage();
 
     },
     methods: {
@@ -152,6 +174,14 @@
           if (this.completeList.length >= result.total) {
             this.completeFinished = true
           }
+        } else if (this.currentTab === 3) {
+          this.loading = false;
+          result.data.map(item => {
+            this.allList.push(item)
+          })
+          if (this.allList.length >= result.total) {
+            this.completeFinisheAll = true
+          }
         }
 
       },
@@ -170,25 +200,38 @@
         }
         this.searchParames.key = val
         this.getIndexData()
+      },
+      //获取未读消息数量
+      getUnreadMessage() {
+        this.timer = setTimeout(() => {
+          this.$store.dispatch('getNewMsgNum')
+          this.getUnreadMessage();
+
+        }, 6000)
+      },
+      destroyed() {
+        clearTimeout(this.timer)
       }
     }
   };
 </script>
 <style lang="scss">
-  .wrapper{
-    .van-hairline--top-bottom{
-    box-shadow:5px 5px 5px #cccccc;
-  }
-    .van-cell{
+  .wrapper {
+    .van-hairline--top-bottom {
+      box-shadow: 5px 5px 5px #cccccc;
+    }
+
+    .van-cell {
       padding: 5px 10px;
     }
+
     .van-tabs__nav--card {
       margin: 0px;
     }
+
     .list {
       height: 100%;
       padding-top: 46px;
     }
   }
-  
 </style>

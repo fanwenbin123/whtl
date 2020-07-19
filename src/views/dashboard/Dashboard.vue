@@ -7,10 +7,10 @@
       </template>
     </lg-header>
     <!-- 缓存界面选择加载 -->
-    <keep-alive>
+    <!-- <keep-alive>
       <router-view v-if="$route.meta.keepAlive" />
-    </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" />
+    </keep-alive> -->
+    <router-view />
     <lg-footer></lg-footer>
     <!--未读消息弹窗-->
     <van-dialog class="msgContent" v-model="dialogShow" title="未读消息" :showCancelButton="false" confirmButtonText="关闭">

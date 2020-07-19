@@ -47,7 +47,7 @@
   import mp3 from "@/assets/850850.mp3";
   import Unclaimed from "./components/Unclaimed";
   import Tasking from "./components/Tasking";
-  import { setToken, getToken } from '@/utils/cookies'
+  import { WHITE_LIST } from "@/router.js"
   export default {
     components: {
       [Toast.name]: Toast,
@@ -85,7 +85,7 @@
           key: '',
           type: 0,
           page: 0,
-          token: getToken()
+          token: localStorage.getItem('token')
         },
         timer: '',  // 定时器
         newNum: 0  //未读消息数量
@@ -102,9 +102,12 @@
         this.searchParames.page = 0
       },
       isChangeMsgNum() {
-        let audio = new Audio()
-        audio.src = this.mp3
-        audio.play();
+        if (this.$store.state.isPlayMusic === 1) {
+          let audio = new Audio()
+          audio.src = this.mp3
+          audio.play();
+        }
+
       }
 
     },
@@ -204,10 +207,11 @@
       //获取未读消息数量
       getUnreadMessage() {
         this.timer = setTimeout(() => {
-          this.$store.dispatch('getNewMsgNum')
-          this.getUnreadMessage();
-
-        }, 6000)
+          if (!WHITE_LIST.includes(this.$route.path)) {
+            this.$store.dispatch('getNewMsgNum')
+            this.getUnreadMessage();
+          }
+        }, 5000)
       },
       destroyed() {
         clearTimeout(this.timer)

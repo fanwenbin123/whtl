@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Toast } from 'vant'
-import { getToken, removeToken } from '@/utils/cookies'
+// import { getToken, removeToken } from '@/utils/cookies'
 import qs from 'qs'
 const service = axios.create({
   // 设置超时时间
@@ -14,7 +14,7 @@ service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencod
  * 用于处理需要在请求前的操作
  */
 service.interceptors.request.use(config => {
-  const TOKEN = getToken()
+  const TOKEN = localStorage.getItem('token')
   //console.log(config.headers)
   //if (TOKEN) config.headers.Authorization = TOKEN
   /**
@@ -57,7 +57,7 @@ service.interceptors.response.use(response => {
   if (res.status === 1) {
     return Promise.resolve(response.data)
   } else if (res.status === 9999) {
-    removeToken()
+    localStorage.removeItem('token')
     location.href = '/#/login'
 
     Toast({

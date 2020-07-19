@@ -13,10 +13,10 @@
     </div>
 </template>
 <script>
-    import Vue from 'vue'
     import { Field, Button, Toast, Divider } from 'vant'
-    import { login } from "@/api/index.js";
-    import { setToken, getToken } from '@/utils/cookies'
+    import { login } from "@/api";
+    // import { setToken, getToken } from '@/utils/cookies'
+    import { mapMutations, mapState } from 'vuex';
     export default {
         name: 'login',
         components: {
@@ -34,6 +34,7 @@
             }
         },
         computed: {
+            ...mapState(['userInfo']),
             usertel() {
                 if (this.tel === "") {
                     return ''
@@ -54,11 +55,13 @@
             }
         },
         created() {
-            if (getToken()) {
-                //   this.$router.push({ path: '/home' })
+
+            if (localStorage.getItem('token')) {
+                this.$router.push({ path: '/home' })
             }
         },
         methods: {
+            ...mapMutations(['changeLogin']),
             login() {
                 const self = this;
                 if (this.tel === '' || this.usertel === '手机号码格式错误') {
@@ -69,13 +72,13 @@
                     Toast('密码输入有误')
                     return
                 }
-                //const { result } = await login({ mobile: this.tel, password: this.password })
                 login({ mobile: this.tel, password: this.password }).then(res => {
                     if (res.status === 1) {
+                        self.changeLogin({
+                            token: res.result.token
+                        })
                         self.$router.push({ path: '/home' })
-                        //window.location.href = 'http://www.baidu.com' 
-                        //alert(window.location.href)
-                        setToken(res.result.token)
+
                     }
                 })
 

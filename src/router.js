@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { getToken } from '@/utils/cookies'
+// import { getToken } from '@/utils/cookies'
 import Home from './views/home.vue'
 import Dashboard from './views/dashboard/Dashboard.vue'
-
+import store from './store'
 Vue.use(Router)
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -80,6 +80,16 @@ const router = new Router({
           }
 
         },
+        {
+          path: '/password',
+          name: 'password',
+          component: () => import('@/views//password'),
+          meta: {
+            title: '修改密码',
+            leftArrow: true
+          }
+
+        },
       ]
     },
 
@@ -90,7 +100,7 @@ const router = new Router({
       meta: {
         noFooter: true
       }
-    }
+    },
 
   ]
 })
@@ -101,7 +111,8 @@ const WHITE_LIST = ['/login']
 router.beforeEach(async (to, from, next) => {
   if (WHITE_LIST.includes(to.path)) return next()
   // 没有 Token 重定向到登录页
-  if (!getToken()) return next('/login')
+  let token = store.state.token || localStorage.getItem('token');
+  if (!token) return next('/login')
   //const map = store.getters['right/map']
   // 开发环境下, 不做路由管制
   //if (process.env.NODE_ENV === 'development') return next()
@@ -109,4 +120,7 @@ router.beforeEach(async (to, from, next) => {
   // if (!(to.path in map) && from.path in map) return next(from.path)
   next()
 })
-export default router
+export {
+  WHITE_LIST,
+  router
+}

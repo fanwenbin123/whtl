@@ -96,3 +96,12 @@ export const unReadMsgToMsg = (data) => {
         data
     })
 }
+
+// 修改密码
+export const modifyPassword = (data) => {
+    return request({
+        url: `${BaseUrl}/api.php/Index/modifyPassword`,
+        method: 'post',
+        data
+    })
+}

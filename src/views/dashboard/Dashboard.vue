@@ -51,6 +51,16 @@
     computed: {
 
     },
+    watch: {
+      '$route.meta.title'() {
+        if (this.$route.query.title) {
+          this.$route.meta.title = this.$route.query.title
+        }
+      }
+    },
+    created() {
+
+    },
     methods: {
       // 获取未读消息
       async handlerNewMsg() {

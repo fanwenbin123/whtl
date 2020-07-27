@@ -25,8 +25,6 @@
           </unclaimed>
         </van-tab>
       </van-tabs>
-
-
     </div>
   </div>
 </template>
@@ -103,6 +101,7 @@
       },
       isChangeMsgNum() {
         if (this.$store.state.isPlayMusic === 1) {
+          console.log(123)
           let audio = new Audio()
           audio.src = this.mp3
           audio.play();
@@ -213,9 +212,9 @@
           }
         }, 5000)
       },
-      destroyed() {
-        clearTimeout(this.timer)
-      }
+    },
+    destroyed() {
+      // clearTimeout(this.timer)
     }
   };
 </script>

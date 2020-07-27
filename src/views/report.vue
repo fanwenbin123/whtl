@@ -1,5 +1,7 @@
 <template>
     <div class='content report'>
+        <lg-header :leftArrow="false" :titleType="1" title="上报" rightText='圈子' @on-click-right='rightClick'>
+        </lg-header>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-cell-group v-for="(item, index) in list" :key="index">
                 <van-cell :title="item.user_id" label="item.task_info">
@@ -45,6 +47,9 @@
 
         },
         methods: {
+            rightClick() {
+                this.$router.push({ path: '/AddInfo', query: { title: '圈子', id: this.id, status: 11 } })
+            },
             handlerImage(index, imageIndex) {
                 let imgList = []
                 let ImageList = this.list[index]['img'].split(',')

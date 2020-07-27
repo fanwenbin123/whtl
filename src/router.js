@@ -76,7 +76,8 @@ const router = new Router({
           name: 'Addinfo',
           component: () => import('@/views/components/Addinfo'),
           meta: {
-            leftArrow: true
+            leftArrow: true,
+            title: ''
           }
 
         },

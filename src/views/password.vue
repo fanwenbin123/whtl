@@ -16,6 +16,7 @@
 </template>
 <script>
     import { Field, Button, Toast, Divider, Form } from 'vant'
+    import { modifyPassword } from "@/api/index.js";
     export default {
         name: 'password',
         components: {
@@ -69,7 +70,18 @@
                 return val !== this.oldPassword
             },
             onSubmit(values) {
-                console.log('submit', values);
+                let parames = {
+                    old_password: this.oldPassword,
+                    new_password: this.newPassword,
+                    confirm_password: this.newPassword2
+                }
+                modifyPassword(parames).then(res => {
+                    if (res.status === 1) {
+                        Toast(res.msg)
+                    } else {
+                        Toast(res.msg)
+                    }
+                })
             },
         },
     }

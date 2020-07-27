@@ -62,11 +62,14 @@
         },
         methods: {
             onClickLeft() {
-                if (this.preventGoBack) {
-                    this.$emit('on-click-left');
-                } else {
-                    this.$router.go(-1);
+                if (this.leftArrow) {
+                    if (this.preventGoBack) {
+                        this.$emit('on-click-left');
+                    } else {
+                        this.$router.go(-1);
+                    }
                 }
+
             },
             onClickRight() {
                 this.$emit('on-click-right');

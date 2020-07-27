@@ -44,3 +44,12 @@
         },
     }
 </script>
+<style lang="scss">
+    img {
+        width: 100%;
+    }
+
+    .content {
+        margin-bottom: 30px;
+    }
+</style>

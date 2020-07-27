@@ -27,8 +27,8 @@
         },
         data() {
             return {
-                tel: '13048973235',
-                password: '123456',
+                tel: '',
+                password: '',
                 zhud: false,
                 loading: false
             }

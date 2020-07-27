@@ -26,9 +26,10 @@
         <van-cell title="操作" v-if="currentTab===1">
           <template #right-icon>
             <div class="operation">
-              <van-button type="primary" size="small">申请入网</van-button>
-              <van-button type="primary" size="small">整改措施</van-button>
-              <van-button type="primary" size="small">评价</van-button>
+              <van-button type="primary" size="small" @click.stop='applyNetwork(item)' :disabled='item.status==2'>
+                {{ item.status| getStatusText }}</van-button>
+              <van-button type="primary" size="small" v-if="item.statics_mark==-1&&item.status>=3&&status<=5"
+                @click.stop='rectification'>整改措施</van-button>
             </div>
           </template>
         </van-cell>
@@ -50,9 +51,9 @@
   </div>
 </template>
 <script>
-  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog,Button } from "vant";
+  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog, Button } from "vant";
   import { formatTime } from '@/utils/index'
-  import { receiveTask } from "@/api";
+  import { receiveTask, getSyscode } from "@/api";
   import { setToken, getToken } from '@/utils/cookies'
   export default {
     name: "Unclamed",
@@ -108,9 +109,12 @@
       },
       // 搜索事件
       onSearch() {
-        this.$emit('search',this.searchVal)
+        this.$emit('search', this.searchVal)
       },
       handlerReceive(item) {
+        if (item.status == 2) {
+          return
+        }
         if (this.currentTab === 0) {
           this.detailInfo = item
           this.show = true
@@ -125,11 +129,18 @@
       },
       // 确认领取任务
       handlerConfirm(id) {
-        receiveTask({ id, token: getToken() }).then(res => {
+        receiveTask({ id, token: localStorage.getItem('token') }).then(res => {
           Toast('任务领取成功')
           this.$emit('del', id)
         })
-      }
+      },
+      applyNetwork(item) {
+        let t = this.$options.filters['getStatusText'](item.status)
+        this.$router.push({ path: '/AddInfo', query: { title: t, id: item.id, status: item.status } })
+      },
+      rectification() {
+        this.$router.push({ path: '/AddInfo', query: { title: '整改措施', id: item.id, status: 9 } })
+      },
     },
     watch: {
       loading: {
@@ -148,13 +159,30 @@
         },
         immediate: true
       }
+    },
+    filters: {
+      getStatusText(val) {
+        console.log(val)
+        switch (val) {
+          case 2:
+            return '等待下发作业号'
+            return
+          case 3:
+            return '申请出网'
+          case 1:
+          case 5:
+            return '申请入网'
+          case 6:
+            return '评价'
+        }
+      }
     }
   };
 </script>
 <style lang="scss">
-  .operation{
-    button{
-      margin-left:10px;
+  .operation {
+    button {
+      margin-left: 10px;
     }
   }
 </style>

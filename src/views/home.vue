@@ -85,7 +85,7 @@
           page: 0,
           token: localStorage.getItem('token')
         },
-        timer: '',  // 定时器
+        timer: null,  // 定时器
         newNum: 0  //未读消息数量
 
       };
@@ -101,7 +101,6 @@
       },
       isChangeMsgNum() {
         if (this.$store.state.isPlayMusic === 1) {
-          console.log(123)
           let audio = new Audio()
           audio.src = this.mp3
           audio.play();
@@ -115,21 +114,11 @@
       if (this.$route.query.currentTab) {
         this.active = this.$route.query.currentTab
       }
+      console.log(this.timer, 'timer')
       this.getUnreadMessage();
 
     },
     methods: {
-      onRefresh(done) {
-        setTimeout(() => {
-          done();
-        }, 1500);
-      },
-      onInfinite(done) {
-        setTimeout(() => {
-          this.num += 50;
-          done();
-        }, 1500);
-      },
       // 搜索事件
       onSearch() {
 
@@ -211,10 +200,11 @@
             this.getUnreadMessage();
           }
         }, 5000)
+
       },
     },
     destroyed() {
-      // clearTimeout(this.timer)
+      clearTimeout(this.timer)
     }
   };
 </script>

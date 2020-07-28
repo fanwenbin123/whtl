@@ -47,6 +47,7 @@ const router = new Router({
           meta: {
             title: '上报',
             leftArrow: false,
+            rightTitle: '圈子'
           }
         },
         {

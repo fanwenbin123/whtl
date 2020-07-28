@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <lg-header :leftArrow="$route.meta.leftArrow" :titleType="1" :title='$route.meta.title'
-      :rightType='$route.meta.rightType? 0:1'>
+      :rightType='$route.meta.rightType? 0:1' :rightText='$route.meta.rightTitle'>
       <template v-slot:right_slot>
         <van-icon name="bulb-o" size="24" :badge="$store.state.newMsgNum" @click='handlerNewMsg' />
       </template>
@@ -90,6 +90,9 @@
             }
           })
         }
+      },
+      onClickRight() {
+        console.log('23')
       }
     }
   }

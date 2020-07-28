@@ -27,8 +27,9 @@
           <template #right-icon>
             <div class="operation">
               <van-button type="primary" size="small" @click.stop='applyNetwork(item)' :disabled='item.status==2'>
+
                 {{ item.status| getStatusText }}</van-button>
-              <van-button type="primary" size="small" v-if="item.statics_mark==-1&&item.status>=3&&status<=5"
+              <van-button type="primary" size="small" v-if="item.statics_mark==-1&&item.status>=3&&item.status<=5"
                 @click.stop='rectification'>整改措施</van-button>
             </div>
           </template>
@@ -140,7 +141,9 @@
       },
       rectification() {
         this.$router.push({ path: '/AddInfo', query: { title: '整改措施', id: item.id, status: 9 } })
+        Toast('点击了整改事件')
       },
+
     },
     watch: {
       loading: {
@@ -162,7 +165,6 @@
     },
     filters: {
       getStatusText(val) {
-        console.log(val)
         switch (val) {
           case 2:
             return '等待下发作业号'
@@ -172,7 +174,7 @@
           case 1:
           case 5:
             return '申请入网'
-          case 6:
+          case 5:
             return '评价'
         }
       }

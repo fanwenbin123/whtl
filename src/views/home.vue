@@ -91,22 +91,21 @@
       };
     },
     computed: {
-      isChangeMsgNum() {
-        return this.$store.state.newMsgNum
-      }
+      //  isChangeMsgNum() {
+      //    return this.$store.state.newMsgNum
+      // }
     },
     watch: {
       currentTab(val) {
         this.searchParames.page = 0
       },
-      isChangeMsgNum() {
-        if (this.$store.state.isPlayMusic === 1) {
-          let audio = new Audio()
-          audio.src = this.mp3
-          audio.play();
-        }
-
-      }
+      // isChangeMsgNum() {
+      //   if (this.$store.state.isPlayMusic === 1) {
+      //     let audio = new Audio()
+      //     audio.src = this.mp3
+      //     audio.play();
+      //   }
+      // }
 
     },
 
@@ -114,8 +113,8 @@
       if (this.$route.query.currentTab) {
         this.active = this.$route.query.currentTab
       }
-      console.log(this.timer, 'timer')
-      this.getUnreadMessage();
+
+      // this.getUnreadMessage();
 
     },
     methods: {

@@ -70,7 +70,8 @@ const router = new Router({
           path: '/taskingDetail',
           name: 'taskingDetail',
           component: () => import('@/views/components/Tasking'),
-          leftArrow: true
+          leftArrow: true,
+          rightTitle: '临时申请出站'
         },
         {
           path: '/Addinfo',

@@ -26,18 +26,21 @@
 <script type="text/javascript">
   import { Icon, Dialog, Collapse, CollapseItem, Toast } from 'vant'
   import { getpyq, getUnreadMessage, unReadMsgToMsg } from "@/api";
+  import { WHITE_LIST } from "@/router.js"
+  import mp3 from "@/assets/850850.mp3";
   export default {
     name: 'DashBoard',
     mounted() { },
     created() {
-
     },
 
     data() {
       return {
+        mp3,
         dialogShow: false,
         activeNames: [],
         unreadMsg: [],
+        timer: null
       }
     },
     components: {
@@ -49,17 +52,31 @@
     },
 
     computed: {
-
+      isChangeMsgNum() {
+        return this.$store.state.newMsgNum
+      }
     },
     watch: {
       '$route.meta.title'() {
         if (this.$route.query.title) {
           this.$route.meta.title = this.$route.query.title
         }
+      },
+      '$route.meta.rightTitle'(val) {
+        this.$route.meta.rightTitle = val
+      },
+      isChangeMsgNum(n, o) {
+        if (this.$store.state.isPlayMusic === 1 && n > o) {
+          let audio = new Audio()
+          audio.src = this.mp3
+          this.$nextTick(() => {
+            audio.play();
+          })
+        }
       }
     },
     created() {
-
+      this.getUnreadMessage()
     },
     methods: {
       // 获取未读消息
@@ -91,9 +108,15 @@
           })
         }
       },
-      onClickRight() {
-        console.log('23')
-      }
+      getUnreadMessage() {
+        this.timer = setTimeout(() => {
+          if (!WHITE_LIST.includes(this.$route.path)) {
+            this.$store.dispatch('getNewMsgNum')
+            this.getUnreadMessage();
+          }
+        }, 5000)
+
+      },
     }
   }
 </script>

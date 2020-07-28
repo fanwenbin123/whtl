@@ -72,7 +72,9 @@
 
             },
             onClickRight() {
-                this.$emit('on-click-right');
+                if (this.$route.meta.rightTitle) {
+                    this.$eventBus.$emit('onClickRight', this.$route.path)
+                }
             }
         },
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="content tasking">
-        <lg-header :leftArrow="true" :titleType="1" :title="title" rightText='临时申请出站' @on-click-right='rightClick'>
-        </lg-header>
+        <!-- <lg-header :leftArrow="true" :titleType="1" :title="title" rightText='临时申请出站' @on-click-right='rightClick'>
+        </lg-header> -->
         <van-cell-group class="wrapper" :title="detailData.type" :border="true">
             <van-cell title="车间" :value="detailData.grade_num" />
             <van-cell title="施工项目" :value="detailData.type" />
@@ -71,12 +71,16 @@
         },
         created() {
             this.id = this.$route.query.id
-            this.title = this.$route.query.title
+            this.$route.meta.title = this.$route.query.title
+            this.$route.meta.rightTitle = '临时申请出站'
             this.getDetailInfo(this.id)
+            this.rightClick()
         },
         methods: {
             rightClick() {
-                this.$router.push({ path: '/AddInfo', query: { title: '临时申请出站', id: this.id, status: 10 } })
+                this.$eventBus.$on('onClickRight', target => {
+                    this.$router.push({ path: '/AddInfo', query: { title: '临时申请出站', id: this.id, status: 10 } })
+                })
             },
             applicant() {
                 this.$router.push({ path: '/AddInfo', query: { title: this.title, id: this.id } })

@@ -11,7 +11,7 @@
     <van-cell-group :title='imgCategoryTitle'>
       <van-row class="inNetworkRow" v-for="(item, index) in typeRow" :key="index">
         <div>{{item.text}}</div>
-        <van-uploader class="uploade" :model="item.fileImageList" :after-read="uploadChange" :max-count="4" multiple />
+        <van-uploader class="uploade" v-model="item.fileImageList" :after-read="uploadChange" :max-count="4" multiple />
       </van-row>
       <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200" placeholder="请输入其他描述"
         show-word-limit />
@@ -21,7 +21,6 @@
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
     </baidu-map>
     <van-button type="info" size="large" @click='submit'>提交</van-button>
-
   </div>
 </template>
 <script>

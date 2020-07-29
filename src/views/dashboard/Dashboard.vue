@@ -62,10 +62,9 @@
           this.$route.meta.title = this.$route.query.title
         }
       },
-      '$route.query.rightTitle'(val) {
-        if (val) {
-          this.$route.meta.rightTitle = val
-        }
+      '$route.meta.rightTitle'(val) {
+        console.log(val, 'val')
+        this.$route.meta.rightTitle = val
       },
       isChangeMsgNum(n, o) {
         if (this.$store.state.isPlayMusic === 1 && n > o) {

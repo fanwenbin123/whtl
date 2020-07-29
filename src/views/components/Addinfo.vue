@@ -15,6 +15,7 @@
 
     <h2 class="van-doc-demo-block__title">图片上传(最多9张)</h2>
     <van-uploader class="uploade" v-model="fileList" :after-read="uploadChange" :max-count="9" multiple />
+    <h2 class="van-doc-demo-block__title">定位上报：</h2>
     <baidu-map class="baidu-map" :zoom="zoom" :center="center" @ready="handler" ak='E7ab13781e2edee9fefc970748efb910'>
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
     </baidu-map>

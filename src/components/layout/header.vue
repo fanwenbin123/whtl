@@ -68,6 +68,7 @@
                 default: 100
             }
         },
+
         methods: {
             onClickLeft() {
                 if (this.leftArrow) {

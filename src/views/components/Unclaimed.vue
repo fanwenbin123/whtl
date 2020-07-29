@@ -18,19 +18,22 @@
     <van-list v-model="load" :finished="finishe" :finished-text="listData.length == 0?'无数据':'没有更多了'" @load="onLoad">
       <van-cell-group v-for="item in listData" :key="item.id" :title='item.type' :border="true"
         @click="handlerReceive(item)">
-        <van-cell title="下发时间" :value='formatTime(item.create_time)' />
-        <van-cell title="开始时间" :value='formatTime(item.task_start_time)' />
-        <van-cell title="结束时间" :value='formatTime(item.task_end_time)' />
-        <van-cell title="作业地点" :value='item.task_location' />
+        <van-cell title="作业负责人" :value='formatTime(item.create_time)' />
+        <van-cell title="盯控干部" :value='formatTime(item.create_time)' />
+        <van-cell title="驻站联络" :value='formatTime(item.task_start_time)' />
+        <van-cell title="现场防护" :value='formatTime(item.task_end_time)' />
+        <van-cell title="远端防护" :value='item.task_location' />
         <van-cell title="负责人" :value='item.main_peason' />
         <van-cell title="操作" v-if="currentTab===1">
           <template #right-icon>
             <div class="operation">
+              {{item.status}}
+              <van-button type="primary" size="small" @click.stop='applyNetwork(item)' v-if='item.status==5'>
+                评价</van-button>
               <van-button type="primary" size="small" @click.stop='applyNetwork(item)' :disabled='item.status==2'>
-
                 {{ item.status| getStatusText }}</van-button>
               <van-button type="primary" size="small" v-if="item.statics_mark==-1&&item.status>=3&&item.status<=5"
-                @click.stop='rectification'>整改措施</van-button>
+                @click.stop='rectification(item)'>整改措施</van-button>
             </div>
           </template>
         </van-cell>
@@ -120,7 +123,7 @@
           this.detailInfo = item
           this.show = true
         } else if (this.currentTab === 1) {
-          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type,rightTitle:'临时申请出站' } })
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, rightTitle: '临时申请出站' } })
         } else if (this.currentTab === 2) {
           this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }
@@ -139,9 +142,8 @@
         let t = this.$options.filters['getStatusText'](item.status)
         this.$router.push({ path: '/AddInfo', query: { title: t, id: item.id, status: item.status } })
       },
-      rectification() {
+      rectification(item) {
         this.$router.push({ path: '/AddInfo', query: { title: '整改措施', id: item.id, status: 9 } })
-        Toast('点击了整改事件')
       },
 
     },

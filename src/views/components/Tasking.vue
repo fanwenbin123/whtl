@@ -72,9 +72,15 @@
         created() {
             this.id = this.$route.query.id
             this.$route.meta.title = this.$route.query.title
-            this.$route.meta.rightTitle = '临时申请出站'
+
             this.getDetailInfo(this.id)
             this.rightClick()
+        },
+        mounted() {
+            this.$nextTick(() => {
+                this.$route.meta.rightTitle = '临时申请出站'
+
+            })
         },
         methods: {
             rightClick() {

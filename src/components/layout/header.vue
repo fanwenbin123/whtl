@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-29 08:57:57
+ * @LastEditTime: 2020-07-29 09:30:49
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \whtl\src\components\layout\header.vue
+--> 
 <template>
     <van-nav-bar :left-arrow="leftArrow" :left-text="leftText" :border="border" :fixed="fixed" :z-index="zIndex"
         @click-left="onClickLeft" @click-right="onClickRight">

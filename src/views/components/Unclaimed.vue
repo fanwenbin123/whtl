@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-25 10:34:14
- * @LastEditTime: 2020-05-25 11:18:50
+ * @LastEditTime: 2020-07-29 09:29:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \whtl\src\views\components\Unclaimed.vue
@@ -120,7 +120,7 @@
           this.detailInfo = item
           this.show = true
         } else if (this.currentTab === 1) {
-          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type } })
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type,rightTitle:'临时申请出站' } })
         } else if (this.currentTab === 2) {
           this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }

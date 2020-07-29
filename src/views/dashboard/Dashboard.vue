@@ -62,7 +62,7 @@
           this.$route.meta.title = this.$route.query.title
         }
       },
-      '$route.meta.rightTitle'(val) {
+      '$route.query.rightTitle'(val) {
         console.log(val, 'val')
         this.$route.meta.rightTitle = val
       },

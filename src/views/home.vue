@@ -118,10 +118,6 @@
 
     },
     methods: {
-      // 搜索事件
-      onSearch() {
-
-      },
       handlerReceive() {
         Toast("领取任务！");
       },
@@ -179,6 +175,7 @@
       del(id) {
         this.list.splice(this.list.findIndex(item => item.id === id), 1)
       },
+      // 搜索事件
       search(val) {
         this.searchParames.page = 1
         if (this.currentTab === 0) {

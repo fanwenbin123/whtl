@@ -2,20 +2,21 @@
   <div class="content">
     <van-field name="checkboxGroup" label="描述">
       <template #input>
-        <van-checkbox-group v-model="checkboxGroup" direction="horizontal" @change='changeCheckbox'>
-          <van-checkbox class="describeCheckbox" :name="item" shape="square" v-for="(item, index) in checkboxList"
-            :key="index">
-            {{item}}
-          </van-checkbox>
-        </van-checkbox-group>
+        <van-radio-group v-model="radio" direction="horizontal">
+          <van-radio class="describeRadio" v-for="(item, index) in radioList" :key="index" :name="item.id">
+            {{item.text}}</van-radio>
+        </van-radio-group>
       </template>
     </van-field>
-    <van-field v-model="remark" rows="2" autosize label="其他描述" type="textarea" maxlength="200" placeholder="请输入其他描述"
-      show-word-limit v-show='showRemark' />
-
-    <h2 class="van-doc-demo-block__title">图片上传(最多9张)</h2>
-    <van-uploader class="uploade" v-model="fileList" :after-read="uploadChange" :max-count="9" multiple />
-    <h2 class="van-doc-demo-block__title">定位上报：</h2>
+    <van-cell-group :title='imgCategoryTitle'>
+      <van-row class="inNetworkRow" v-for="(item, index) in typeRow" :key="index">
+        <div>{{item.text}}</div>
+        <van-uploader class="uploade" :model="item.fileImageList" :after-read="uploadChange" :max-count="4" multiple />
+      </van-row>
+      <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200" placeholder="请输入其他描述"
+        show-word-limit />
+    </van-cell-group>
+    <h2 class="van-doc-demo-block__title" style="margin-bottom: 10px;">定位上报：</h2>
     <baidu-map class="baidu-map" :zoom="zoom" :center="center" @ready="handler" ak='E7ab13781e2edee9fefc970748efb910'>
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
     </baidu-map>
@@ -24,9 +25,10 @@
   </div>
 </template>
 <script>
-  import { Toast, Cell, CellGroup, Field, Button, Uploader, Form, Switch, Checkbox, CheckboxGroup } from "vant";
+  import { Toast, Cell, CellGroup, Field, Button, Uploader, Form, Row, Col, Radio, RadioGroup } from "vant";
   import { BaiduMap, BmScale, BmGeolocation } from 'vue-baidu-map'
   import { getSyscode } from "@/api";
+  import flowInfo from '@/utils/flowInfo'
   export default {
     name: 'AddInfo',
     components: {
@@ -37,9 +39,10 @@
       [Button.name]: Button,
       [Uploader.name]: Uploader,
       [Form.name]: Form,
-      [Switch.name]: Switch,
-      [Checkbox.name]: Checkbox,
-      [CheckboxGroup.name]: CheckboxGroup,
+      [Row.name]: Row,
+      [Col.name]: Col,
+      [Radio.name]: Radio,
+      [RadioGroup.name]: RadioGroup,
       BaiduMap,
       BmScale,
       BmGeolocation,
@@ -56,54 +59,50 @@
         zoom: 15,//必须写上,自己因为忘记写一直无法自动定位
         address: {},
         point: {},
-        showRemark: false,
-        checkbox: false,
-        checkboxGroup: [],
-        checkboxList: ["线路调查",
-          "排障",
-          "卸长",
-          "丈量",
-          "胶结",
-          "道下",
-          "换轨",
-          "收、卸短轨",
-          "精磨",
-          "处理扣件",
-          "收长轨",
-          "驻地巡守",
-          "接水电",
-          "装卸路料",
-          "设备检修",
-          "应急处理",
-          "探伤",
-          "巡道防胀",
-          "添乘检查",
-          "收、卸路料",
-          "旧轨料处置",
-          "车辆运输",
-          "集中培训",
-          "驻地编组",
-          "驻地装卸料",
-          "收、卸短轨",
-          "设备保养检修",
-          "车辆运输",
-          "道下焊",
-          "道上焊",
-          "封口焊",
-          "插入焊",
-          "精磨",
-          "基地编组",
-          "试焊",
-          "生产检验",
-          "型式检验",
-          "其他",
-        ]
+        radio: '',
+        radioList: [
+          {
+            id: '1',
+            text: '巡道防胀'
+          },
+          {
+            id: '2',
+            text: '线路调查'
+          },
+          {
+            id: '3',
+            text: '排障'
+          },
+          {
+            id: '4',
+            text: '卸长轨'
+          },
+          {
+            id: '5',
+            text: '换轨'
+          }
+        ],
+        typeRow: [],
+        imgCategoryTitle: '',
+        flowInfo
+
       }
     },
     created() {
-      this.title = this.$route.query.title
+      this.$route.meta.title = this.$route.query.title
       this.id = this.$route.query.id
       this.status = this.$route.query.status
+      let type = this.$route.query.type
+      if (type && this.status == 1) {
+        this.getInNetworkFlowInfo(type)
+      }
+      if (type && this.status == 3) {
+        this.getOutNetworkFlowInfo(type)
+      }
+      let currentType = this.radioList.filter(res => type == res.text)[0]
+      if (currentType) {
+        this.radio = currentType['id']
+      }
     },
     methods: {
       handler({ BMap, map }) {
@@ -177,16 +176,56 @@
           that.fileImageList.push(that.ontpys(img, file.file.size))
         }
       },
-
-      changeCheckbox(val) {
-        if (val.includes('其他')) {
-          this.showRemark = true
-        } else {
-          this.showRemark = false
+      //获取入网流程
+      getInNetworkFlowInfo(type) {
+        switch (type) {
+          case '巡道防胀':
+            this.typeRow = this.flowInfo.patrolInNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.patrolInNetwork.groupTitle
+            break;
+          case '线路调查':
+            this.typeRow = this.flowInfo.lineInNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.lineInNetwork.groupTitle
+            break;
+          case '排障':
+            this.typeRow = this.flowInfo.troubleshootInNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.troubleshootInNetwork.groupTitle
+            break;
+          case '卸长轨':
+            this.typeRow = this.flowInfo.unloadingLongTrackInNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.unloadingLongTrackInNetwork.groupTitle
+            break;
+          case '换轨':
+            this.typeRow = this.flowInfo.changeTrackInNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.changeTrackInNetwork.groupTitle
+            break;
         }
-
       },
-
+      //获取出网流程
+      getOutNetworkFlowInfo(type) {
+        switch (type) {
+          case '巡道防胀':
+            this.typeRow = this.flowInfo.patrolOutNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.patrolOutNetwork.groupTitle
+            break;
+          case '线路调查':
+            this.typeRow = this.flowInfo.lineOutNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.lineOutNetwork.groupTitle
+            break;
+          case '排障':
+            this.typeRow = this.flowInfo.troubleshootOutNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.troubleshootOutNetwork.groupTitle
+            break;
+          case '卸长轨':
+            this.typeRow = this.flowInfo.unloadingLongTrackOutNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.unloadingLongTrackInNetwork.groupTitle
+            break;
+          case '换轨':
+            this.typeRow = this.flowInfo.changeTrackOutNetwork.imgInfo
+            this.imgCategoryTitle = this.flowInfo.changeTrackOutNetwork.groupTitle
+            break;
+        }
+      },
       submit() {
         if (this.showRemark) {
           this.checkboxGroup.push(this.remark)
@@ -233,7 +272,12 @@
     line-height: 16px;
   }
 
-  .describeCheckbox {
+  .describeRadio {
     margin-top: 3px;
+  }
+
+  .inNetworkRow {
+    padding-left: 10px;
+    padding-top: 10px;
   }
 </style>

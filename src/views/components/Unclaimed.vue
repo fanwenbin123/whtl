@@ -16,24 +16,35 @@
       </van-search>
     </van-sticky>
     <van-list v-model="load" :finished="finishe" :finished-text="listData.length == 0?'无数据':'没有更多了'" @load="onLoad">
-      <van-cell-group v-for="item in listData" :key="item.id" :title='item.type' :border="true"
-        @click="handlerReceive(item)">
-        <van-cell title="作业负责人" :value='formatTime(item.create_time)' />
-        <van-cell title="盯控干部" :value='formatTime(item.create_time)' />
-        <van-cell title="驻站联络" :value='formatTime(item.task_start_time)' />
-        <van-cell title="现场防护" :value='formatTime(item.task_end_time)' />
-        <van-cell title="远端防护" :value='item.task_location' />
+      <van-cell-group v-for="item in listData" :key="item.id" :border="true" @click="handlerReceive(item)"
+        style="margin-bottom: 10px;">
+        <template>
+          <div class="group-title">
+            <div class="group-title-left">{{item.type}}</div>
+            <div class="group-title-right">{{item.grade_num}}</div>
+          </div>
+
+        </template>
+        <div class="main-peason">作业负责人: {{item.main_peason}}{{item.mobile}}</div>
+        <van-cell title="盯控干部" :value='item.see_peason' />
+        <van-cell title="驻站联络" :value='item.rallway_info' />
+        <van-cell title="现场防护" :value='item.local_protected' />
+        <van-cell title="远端防护" :value='item.remote_protected' />
         <van-cell title="负责人" :value='item.main_peason' />
         <van-cell title="操作" v-if="currentTab===1">
           <template #right-icon>
             <div class="operation">
-              {{item.status}}
-              <van-button type="primary" size="small" @click.stop='applyNetwork(item)' v-if='item.status==5'>
+              <van-button type="primary" size="small" @click.stop='applyNetwork(item,1)'
+                v-if='item.status==5&&item.statics_mark==1 '>
                 评价</van-button>
-              <van-button type="primary" size="small" @click.stop='applyNetwork(item)' :disabled='item.status==2'>
-                {{ item.status| getStatusText }}</van-button>
-              <van-button type="primary" size="small" v-if="item.statics_mark==-1&&item.status>=3&&item.status<=5"
-                @click.stop='rectification(item)'>整改措施</van-button>
+              <van-button type="primary" size="small" @click.stop='applyNetwork(item,2)' v-if='item.status==1'>
+                申请入网</van-button>
+              <van-button type="primary" size="small" @click.stop='applyNetwork(item,3)'
+                v-if='item.status==3 &&item.statics_mark == 1'>
+                申请出网</van-button>
+              <van-button type="primary" size="small"
+                v-if="(item.statics_mark==-1&&item.status==5)|| (item.statics_mark==-1&&item.status==3)"
+                @click.stop='applyNetwork(item,4)'>整改措施</van-button>
             </div>
           </template>
         </van-cell>
@@ -55,7 +66,7 @@
   </div>
 </template>
 <script>
-  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog, Button } from "vant";
+  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog, Button, Divider } from "vant";
   import { formatTime } from '@/utils/index'
   import { receiveTask, getSyscode } from "@/api";
   import { setToken, getToken } from '@/utils/cookies'
@@ -71,6 +82,7 @@
       [Tabs.name]: Tabs,
       [Sticky.name]: Sticky,
       [Button.name]: Button,
+      [Divider.name]: Divider,
       [Dialog.Component.name]: Dialog.Component
     },
 
@@ -138,9 +150,23 @@
           this.$emit('del', id)
         })
       },
-      applyNetwork(item) {
-        let t = this.$options.filters['getStatusText'](item.status)
-        this.$router.push({ path: '/AddInfo', query: { title: t, id: item.id, status: item.status } })
+      applyNetwork(item, type) {
+        let t = ''
+        switch (type) {
+          case 1:
+            t = '评价'
+            break
+          case 2:
+            t = '申请入网'
+            break
+          case 3:
+            t = '申请出网'
+            break
+          case 4:
+            t = '整改措施'
+            break
+        }
+        this.$router.push({ path: '/AddInfo', query: { title: t, id: item.id, status: item.status, type: item.type } })
       },
       rectification(item) {
         this.$router.push({ path: '/AddInfo', query: { title: '整改措施', id: item.id, status: 9 } })
@@ -165,25 +191,33 @@
         immediate: true
       }
     },
-    filters: {
-      getStatusText(val) {
-        switch (val) {
-          case 2:
-            return '等待下发作业号'
-            return
-          case 3:
-            return '申请出网'
-          case 1:
-          case 5:
-            return '申请入网'
-          case 5:
-            return '评价'
-        }
-      }
-    }
   };
 </script>
 <style lang="scss">
+  .group-title {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    background: #eee;
+    height: 30px;
+
+    &-left {
+      float: left;
+    }
+
+    &-right {
+      float: right;
+      margin-right: 10px;
+    }
+  }
+
+  .main-peason {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ebedf0;
+  }
+
   .operation {
     button {
       margin-left: 10px;

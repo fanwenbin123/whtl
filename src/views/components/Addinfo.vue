@@ -226,10 +226,6 @@
         }
       },
       submit() {
-        if (this.showRemark) {
-          this.checkboxGroup.push(this.remark)
-          this.checkboxGroup.splice(this.checkboxGroup.findIndex(item => item == '其他'), 1)
-        }
         getSyscode({
           id: this.id,
           status: this.status,

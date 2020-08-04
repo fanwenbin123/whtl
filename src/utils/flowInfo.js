@@ -101,7 +101,7 @@ const flowInfo = {
             }
         ]
     },
-    unloadingLongTrackInNetwork: {
+    unloadingLongTrackOutNetwork: {
         type: '卸长轨',
         groupTitle: '出网照片',
         imgInfo: [

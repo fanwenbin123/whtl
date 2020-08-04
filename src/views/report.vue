@@ -49,7 +49,7 @@
         methods: {
             rightClick() {
                 this.$eventBus.$on('onClickRight', target => {
-                    this.$router.push({ path: '/AddInfo', query: { title: '圈子', id: this.id, status: 11 } })
+                    this.$router.push({ path: '/Quanzi', query: { title: '圈子', id: this.id, status: 11 } })
                 })
             },
             handlerImage(index, imageIndex) {

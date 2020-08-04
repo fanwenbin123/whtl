@@ -11,10 +11,90 @@
     <van-cell-group :title='imgCategoryTitle'>
       <van-row class="inNetworkRow" v-for="(item, index) in typeRow" :key="index">
         <div>{{item.text}}</div>
-        <van-uploader class="uploade" v-model="item.fileImageList" :after-read="uploadChange" :max-count="4" multiple />
+        <van-uploader class="uploade" v-model="item.fileImageList" :after-read="(e)=>uploadChange(e,item)"
+          :max-count="4" multiple />
       </van-row>
       <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200" placeholder="请输入其他描述"
         show-word-limit />
+    </van-cell-group>
+    <van-cell-group title='安全确认' v-if="status==1">
+      <van-row class="mb_10">
+        <van-radio-group v-model="focusRadio" direction="horizontal">
+          <van-col span="12">
+            <van-radio name="1" shape="square" class="mt_8">
+              盯控干部：{{see_peason}}
+            </van-radio>
+          </van-col>
+          <van-col span="12">
+            <van-radio name="2" shape="square">
+              <template>
+                <van-field class="security-cell" v-model="see_peason_input" label="变更" label-class='security-lable'
+                  placeholder="请输入" />
+              </template>
+            </van-radio>
+          </van-col>
+        </van-radio-group>
+      </van-row>
+      <van-row class="mb_10">
+        <van-radio-group v-model="contactRadio" direction="horizontal">
+          <van-col span="12">
+            <van-radio name="1" shape="square" class="mt_8">
+              驻站联络：{{rallway_info}}
+            </van-radio>
+          </van-col>
+          <van-col span="12">
+            <van-radio name="2" shape="square">
+              <template>
+                <van-field class="security-cell" v-model="rallway_info_input" label="变更" label-class='security-lable'
+                  placeholder="请输入" />
+              </template>
+            </van-radio>
+          </van-col>
+        </van-radio-group>
+      </van-row>
+      <van-row class="mb_10">
+        <van-radio-group v-model="protectRadio" direction="horizontal">
+          <van-col span="12">
+            <van-radio name="1" shape="square" class="mt_8">
+              现场防护：{{local_protected}}
+            </van-radio>
+          </van-col>
+          <van-col span="12">
+            <van-radio name="2" shape="square">
+              <template>
+                <van-field class="security-cell" v-model="local_protected_input" label="变更" label-class='security-lable'
+                  placeholder="请输入" />
+              </template>
+            </van-radio>
+          </van-col>
+        </van-radio-group>
+      </van-row>
+      <van-row class="mb_10">
+        <van-radio-group v-model="distalRadio" direction="horizontal">
+          <van-col span="12">
+            <van-radio name="1" shape="square" class="mt_8">
+              远端防护:{{remote_protected}}
+            </van-radio>
+          </van-col>
+          <van-col span="12">
+            <van-radio name="2" shape="square">
+              <template>
+                <van-field class="security-cell" v-model="remote_protected_input" label="变更"
+                  label-class='security-lable' placeholder="请输入" />
+              </template>
+            </van-radio>
+          </van-col>
+        </van-radio-group>
+      </van-row>
+    </van-cell-group>
+    <van-cell-group title="评价" v-if="status==3">
+      <van-radio-group class="evaluateRadio" v-model="evaluate" direction="horizontal">
+        <van-radio name="1">一般</van-radio>
+        <van-radio name="2">中等</van-radio>
+        <van-radio name="3">中上</van-radio>
+        <van-radio name="4">较好</van-radio>
+        <van-radio name="5">优秀</van-radio>
+      </van-radio-group>
     </van-cell-group>
     <h2 class="van-doc-demo-block__title" style="margin-bottom: 10px;">定位上报：</h2>
     <baidu-map class="baidu-map" :zoom="zoom" :center="center" @ready="handler" ak='E7ab13781e2edee9fefc970748efb910'>
@@ -59,6 +139,7 @@
         address: {},
         point: {},
         radio: '',
+        checked: true,
         radioList: [
           {
             id: '1',
@@ -83,21 +164,39 @@
         ],
         typeRow: [],
         imgCategoryTitle: '',
-        flowInfo
-
+        flowInfo,
+        focusRadio: '1',
+        contactRadio: '1',
+        protectRadio: '1',
+        distalRadio: '1',
+        see_peason: '',
+        rallway_info: '',
+        local_protected: '',
+        remote_protected: '',
+        see_peason_input: '',
+        rallway_info_input: '',
+        local_protected_input: '',
+        remote_protected_input: '',
+        evaluate: '5'
       }
     },
     created() {
-      this.$route.meta.title = this.$route.query.title
-      this.id = this.$route.query.id
-      this.status = this.$route.query.status
-      let type = this.$route.query.type
+      let routeParames = this.$route.query
+      this.$route.meta.title = routeParames.title
+      this.id = routeParames.id
+      this.status = routeParames.status
+      let type = routeParames.type
+      this.see_peason = routeParames.see_peason || ' /'
+      this.rallway_info = routeParames.rallway_info || ' /'
+      this.local_protected = routeParames.local_protected || ' /'
+      this.remote_protected = routeParames.remote_protected || ' /'
       if (type && this.status == 1) {
         this.getInNetworkFlowInfo(type)
       }
       if (type && this.status == 3) {
         this.getOutNetworkFlowInfo(type)
       }
+      this.clearImage();
       let currentType = this.radioList.filter(res => type == res.text)[0]
       if (currentType) {
         this.radio = currentType['id']
@@ -141,7 +240,7 @@
         // let maxWidth = 750
         let quality = 0.8
         if (imgSize > 200 * 1024) {
-          quality = 0.5// 压缩质量
+          quality = 0.9// 压缩质量
         }
         let canvas = document.createElement('canvas')
         let drawer = canvas.getContext('2d')
@@ -167,12 +266,13 @@
         return new File([u8arr], filename, { type: mime })
       },
       // 选择图片
-      uploadChange(file) {
+      uploadChange(file, item) {
+        console.log(file, item)
         let that = this
         let img = new Image()
         img.src = file.content
         img.onload = function () {
-          that.fileImageList.push(that.ontpys(img, file.file.size))
+          that.ontpys(img, file.file.size)
         }
       },
       //获取入网流程
@@ -225,23 +325,54 @@
             break;
         }
       },
+      // 清空图片数据
+      clearImage() {
+        this.typeRow.map(item => {
+          item.fileImageList = []
+        })
+      },
       submit() {
-        getSyscode({
-          id: this.id,
-          status: this.status,
-          remark: this.checkboxGroup.toString(),
-          point: this.point,
-          address: this.address,
-          imageList: this.fileImageList
-        }).then(res => {
+        this.typeRow.map(item => {
+          this.fileImageList.push(item.fileImageList)
+        })
+        let params = {}
+        if (this.status == 1) {
+          params = {
+            id: this.id,
+            taskType: this.radio,
+            status: this.status,
+            remark: this.remark,
+            point: this.point,
+            address: this.address,
+            imageList: this.fileImageList,
+            see_peason_radio: this.focusRadio,
+            rallway_info_radio: this.contactRadio,
+            local_protected_radio: this.protectRadio,
+            remote_protected_radio: this.distalRadio,
+            see_peason: this.see_peason_input,
+            rallway_info: this.rallway_info_input,
+            local_protected: this.local_protected_input,
+            remote_protected: this.remote_protected_input,
+          }
+        } else {
+          params = {
+            id: this.id,
+            taskType: this.radio,
+            status: this.status,
+            remark: this.remark,
+            point: this.point,
+            address: this.address,
+            imageList: this.fileImageList,
+            evaluate: this.evaluate
+          }
+        }
+        getSyscode(params).then(res => {
           Toast({
             message: res.msg,
             duration: 2000,
           })
-          this.$router.go(-1);
+          this.$router.push({ path: '/' })
         })
-
-        //   this.$router.push({path:'/',query:{currentTab:1}})
       }
     },
   }
@@ -274,5 +405,32 @@
   .inNetworkRow {
     padding-left: 10px;
     padding-top: 10px;
+  }
+
+  .mb_10 {
+    margin-bottom: 10px;
+  }
+
+  .mt_8 {
+    margin-top: 8px;
+  }
+
+  /deep/ .security-lable {
+    width: 40px;
+    padding: 5px;
+  }
+
+  /deep/ .security-cell {
+    padding: 0px;
+
+    .van-field__body {
+      margin-top: 5px;
+    }
+  }
+
+  .evaluateRadio {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 </style>

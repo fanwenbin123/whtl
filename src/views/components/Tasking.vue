@@ -1,55 +1,103 @@
 <template>
     <div class="content tasking">
-        <!-- <lg-header :leftArrow="true" :titleType="1" :title="title" rightText='临时申请出站' @on-click-right='rightClick'>
-        </lg-header> -->
-        <van-cell-group class="wrapper" :title="detailData.type" :border="true">
-            <van-cell title="车间" :value="detailData.grade_num" />
-            <van-cell title="施工项目" :value="detailData.type" />
-            <van-cell title="作业地点" :value="detailData.task_location" />
-            <van-cell title="开始时间" :value="formatTime(detailData.task_start_time)" />
-            <van-cell title="结束时间" :value="formatTime(detailData.task_end_time)" />
-            <van-cell title="施工类别" :value="detailData.main_task" />
-            <van-cell title="负责人" :value="detailData.main_peason" />
-            <van-cell title="盯防干部" :value="detailData.see_peason" />
-            <van-cell title="作业命令号" :value="detailData.sys_code" v-if="detailData.status>2"
-                :value-class='detailData.status>2?"red":""' />
-            <van-cell title="任务详情" :label="detailData.main_task" />
+        <van-cell-group class="wrapper" :border="true" style="margin-bottom: 10px;">
+            <template>
+                <div class="group-title">
+                    <div class="group-title-left">{{detailData.type}}</div>
+                    <div class="group-title-right">{{detailData.grade_num}}</div>
+                </div>
+            </template>
+            <van-cell title="入网命令号" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
+            <van-cell title="作业负责人" :value="detailData.main_peason" />
         </van-cell-group>
-        <van-button class="applicant" type="info" size="large" @click='applicant'>{{ detailData.status | getText }}
-        </van-button>
-        <!-- <van-steps direction="vertical" :active="1">
-        <van-step>
-          <h3><van-button type="info" size="large" @click='addPlace'>添加干部到位</van-button></h3>
-         
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large">作业前三分钟安全教育</van-button></h3>
-         
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large" disabled>驻站防护到位</van-button></h3>
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large" disabled>调车作业计划单签认</van-button></h3>
-            <p>启动车辆</p>
-            <p>开启监控设备、输入GYK数据</p>
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large" disabled>轨道车作业状态及装载物品检查</van-button></h3>
-            <p>根据驻站员协调情况撤除防溜进行作业</p>
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large" disabled>作业完毕入库防溜</van-button></h3>
-        </van-step>
-        <van-step>
-            <h3><van-button type="info" size="large" disabled>结束任务</van-button></h3>
-        </van-step>
-      </van-steps> -->
+        <van-cell-group>
+            <van-row class="mb_10 ml_10 mt_5">
+                <van-radio-group v-model="focusRadio" direction="horizontal">
+                    <van-col span="12">
+                        <van-radio name="1" shape="square" class="mt_8">
+                            盯控干部：{{see_peason}}
+                        </van-radio>
+                    </van-col>
+                    <van-col span="12">
+                        <van-radio name="2" shape="square">
+                            <template>
+                                变更
+                            </template>
+                        </van-radio>
+                    </van-col>
+                </van-radio-group>
+            </van-row>
+            <van-row class="mb_10 ml_10 mt_5">
+                <van-radio-group v-model="contactRadio" direction="horizontal">
+                    <van-col span="12">
+                        <van-radio name="1" shape="square" class="mt_8">
+                            驻站联络：{{rallway_info}}
+                        </van-radio>
+                    </van-col>
+                    <van-col span="12">
+                        <van-radio name="2" shape="square">
+                            <template>
+                                变更
+                            </template>
+                        </van-radio>
+                    </van-col>
+                </van-radio-group>
+            </van-row>
+            <van-row class="mb_10 ml_10 mt_5">
+                <van-radio-group v-model="protectRadio" direction="horizontal">
+                    <van-col span="12">
+                        <van-radio name="1" shape="square" class="mt_8">
+                            现场防护：{{local_protected}}
+                        </van-radio>
+                    </van-col>
+                    <van-col span="12">
+                        <van-radio name="2" shape="square">
+                            <template>
+                                变更
+                            </template>
+                        </van-radio>
+                    </van-col>
+                </van-radio-group>
+            </van-row>
+            <van-row class="mb_10 ml_10 mt_5">
+                <van-radio-group v-model="distalRadio" direction="horizontal">
+                    <van-col span="12">
+                        <van-radio name="1" shape="square" class="mt_8">
+                            远端防护:{{remote_protected}}
+                        </van-radio>
+                    </van-col>
+                    <van-col span="12">
+                        <van-radio name="2" shape="square">
+                            <template>
+                                变更
+                            </template>
+                        </van-radio>
+                    </van-col>
+                </van-radio-group>
+            </van-row>
+        </van-cell-group>
+        <van-cell-group title='作业地点' :border="true" style="margin-bottom: 10px;">
+            <van-cell title="区间（战场）" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
+            <van-cell title="起止里程" :value="detailData.main_peason" />
+        </van-cell-group>
+        <van-cell-group title='作业时间' :border="true" style="margin-bottom: 10px;">
+            <van-cell title="起止时间" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
+            <van-cell title="计划入网时间" :value="detailData.main_peason" />
+            <van-cell title="计划出网时间" :value="detailData.main_peason" />
+        </van-cell-group>
+        <van-cell-group title='其他信息' :border="true" style="margin-bottom: 10px;">
+            <van-cell title="职工人数" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
+            <van-cell title="劳务工人数" :value="detailData.main_peason" />
+            <van-cell title="主要机具" :value="detailData.main_peason" />
+            <van-cell title="注意事项" label="描述信息" />
+        </van-cell-group>
+        <!-- <van-button class="applicant" type="info" size="large" @click='applicant'>{{ detailData.status | getText }}
+        </van-button> -->
     </div>
 </template>
 
 <script>
-    import { Toast, Cell, CellGroup, Image, Button } from "vant";
+    import { Toast, Cell, CellGroup, Image, Button, Radio, RadioGroup, Row, Col } from "vant";
     import { getTaskDetail } from "@/api";
     import { formatTime } from '@/utils/index'
     export default {
@@ -60,13 +108,30 @@
             [CellGroup.name]: CellGroup,
             [Image.name]: Image,
             [Button.name]: Button,
+            [Radio.name]: Radio,
+            [RadioGroup.name]: RadioGroup,
+            [Row.name]: Row,
+            [Col.name]: Col,
         },
         data() {
             return {
                 id: '',
                 title: '',
                 detailData: {},
-                formatTime
+                formatTime,
+                focusRadio: '1',
+                contactRadio: '1',
+                protectRadio: '1',
+                distalRadio: '1',
+                see_peason: '',
+                rallway_info: '',
+                local_protected: '',
+                remote_protected: '',
+                see_peason_input: '',
+                rallway_info_input: '',
+                local_protected_input: '',
+                remote_protected_input: '',
+                evaluate: '5'
             }
         },
         created() {
@@ -77,10 +142,9 @@
             this.rightClick()
         },
         mounted() {
-            this.$nextTick(() => {
-                this.$route.meta.rightTitle = '临时申请出站'
-
-            })
+            // this.$nextTick(() => {
+            //     this.$route.meta.rightTitle = '临时申请出站'
+            // })
         },
         methods: {
             rightClick() {
@@ -115,5 +179,36 @@
 
     .red {
         color: red;
+    }
+
+    .mb_10 {
+        margin-bottom: 10px;
+    }
+
+    .ml_10 {
+        margin-left: 10px;
+    }
+
+    .mt_5 {
+        margin-top: 5px;
+    }
+
+    /deep/ .security-lable {
+        width: 40px;
+        padding: 5px;
+    }
+
+    /deep/ .security-cell {
+        padding: 0px;
+
+        .van-field__body {
+            margin-top: 5px;
+        }
+    }
+
+    .evaluateRadio {
+        padding-left: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 </style>

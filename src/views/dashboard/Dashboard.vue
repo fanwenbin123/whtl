@@ -7,10 +7,10 @@
       </template>
     </lg-header>
     <!-- 缓存界面选择加载 -->
-    <!-- <keep-alive>
+    <keep-alive>
       <router-view v-if="$route.meta.keepAlive" />
-    </keep-alive> -->
-    <router-view />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" />
     <lg-footer></lg-footer>
     <!--未读消息弹窗-->
     <van-dialog class="msgContent" v-model="dialogShow" title="未读消息" :showCancelButton="false" confirmButtonText="关闭">
@@ -63,8 +63,9 @@
         }
       },
       '$route.query.rightTitle'(val) {
-        console.log(val, 'val')
-        this.$route.meta.rightTitle = val
+        if (val) {
+          this.$route.meta.rightTitle = val
+        }
       },
       isChangeMsgNum(n, o) {
         if (this.$store.state.isPlayMusic === 1 && n > o) {

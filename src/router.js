@@ -28,7 +28,8 @@ const router = new Router({
           meta: {
             title: '任务管理',
             leftArrow: false,
-            rightType: true
+            rightType: true,
+            keepAlive: true
           }
         },
         {
@@ -45,9 +46,9 @@ const router = new Router({
           name: 'report',
           component: () => import('@/views/report'),
           meta: {
+            rightTitle: '圈子',
             title: '上报',
-            leftArrow: false,
-            rightTitle: '圈子'
+            leftArrow: false
           }
         },
         {
@@ -70,9 +71,8 @@ const router = new Router({
           path: '/taskingDetail',
           name: 'taskingDetail',
           component: () => import('@/views/components/Tasking'),
-          rightTitle: '申请临时出站',
-          leftArrow: true,
-          rightTitle: '临时申请出站',
+          // rightTitle: '申请临时出站',
+          leftArrow: true
         },
         {
           path: '/Addinfo',
@@ -82,7 +82,15 @@ const router = new Router({
             leftArrow: true,
             title: ''
           }
-
+        },
+        {
+          path: '/Quanzi',
+          name: 'Quanzi',
+          component: () => import('@/views/components/Quanzi'),
+          meta: {
+            leftArrow: true,
+            title: '圈子'
+          }
         },
         {
           path: '/password',

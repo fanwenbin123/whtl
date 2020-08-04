@@ -113,9 +113,10 @@
       if (this.$route.query.currentTab) {
         this.active = this.$route.query.currentTab
       }
-
       // this.getUnreadMessage();
 
+    },
+    activated() {
     },
     methods: {
       handlerReceive() {

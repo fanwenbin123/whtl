@@ -23,7 +23,6 @@
             <div class="group-title-left">{{item.type}}</div>
             <div class="group-title-right">{{item.grade_num}}</div>
           </div>
-
         </template>
         <div class="main-peason">作业负责人: {{item.main_peason}}{{item.mobile}}</div>
         <van-cell title="盯控干部" :value='item.see_peason' />
@@ -34,9 +33,6 @@
         <van-cell title="操作" v-if="currentTab===1">
           <template #right-icon>
             <div class="operation">
-              <van-button type="primary" size="small" @click.stop='applyNetwork(item,1)'
-                v-if='item.status==5&&item.statics_mark==1 '>
-                评价</van-button>
               <van-button type="primary" size="small" @click.stop='applyNetwork(item,2)' v-if='item.status==1'>
                 申请入网</van-button>
               <van-button type="primary" size="small" @click.stop='applyNetwork(item,3)'
@@ -44,7 +40,7 @@
                 申请出网</van-button>
               <van-button type="primary" size="small"
                 v-if="(item.statics_mark==-1&&item.status==5)|| (item.statics_mark==-1&&item.status==3)"
-                @click.stop='applyNetwork(item,4)'>整改措施</van-button>
+                @click.stop='rectification(item,4)'>整改措施</van-button>
             </div>
           </template>
         </van-cell>
@@ -128,14 +124,12 @@
         this.$emit('search', this.searchVal)
       },
       handlerReceive(item) {
-        if (item.status == 2) {
-          return
-        }
+
         if (this.currentTab === 0) {
           this.detailInfo = item
           this.show = true
         } else if (this.currentTab === 1) {
-          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, rightTitle: '临时申请出站' } })
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type } })
         } else if (this.currentTab === 2) {
           this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }
@@ -166,10 +160,21 @@
             t = '整改措施'
             break
         }
-        this.$router.push({ path: '/AddInfo', query: { title: t, id: item.id, status: item.status, type: item.type } })
+        this.$router.push({
+          path: '/AddInfo', query: {
+            title: t,
+            id: item.id,
+            status: item.status,
+            type: item.type,
+            see_peason: item.see_peason,
+            rallway_info: item.rallway_info,
+            local_protected: item.local_protected,
+            remote_protected: item.remote_protected,
+          }
+        })
       },
       rectification(item) {
-        this.$router.push({ path: '/AddInfo', query: { title: '整改措施', id: item.id, status: 9 } })
+        this.$router.push({ path: '/Quanzi', query: { title: '整改措施', id: item.id, status: 9 } })
       },
 
     },

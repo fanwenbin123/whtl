@@ -131,7 +131,7 @@
         } else if (this.currentTab === 1) {
           this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type } })
         } else if (this.currentTab === 2) {
-          this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
+          //  this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }
       },
       onLoad() {

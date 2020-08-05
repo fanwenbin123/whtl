@@ -98,6 +98,7 @@
     watch: {
       currentTab(val) {
         this.searchParames.page = 0
+
       },
       // isChangeMsgNum() {
       //   if (this.$store.state.isPlayMusic === 1) {
@@ -110,14 +111,33 @@
     },
 
     created() {
-      if (this.$route.query.currentTab) {
-        this.active = this.$route.query.currentTab
-      }
-      // this.getUnreadMessage();
 
     },
     activated() {
+      if (Object.keys(this.$route.query).length > 0) {
+        if (this.active === 1) {
+          let parames = this.$route.query
+          let id = parames.id
+          let index = this.ongoingList.findIndex(item => item.id == id)
+          if (parames.see_peason_input) {
+            this.$set(this.ongoingList[index], 'see_peason', parames.see_peason_input)
+          }
+          if (parames.rallway_info_input) {
+            this.$set(this.ongoingList[index], 'rallway_info', parames.rallway_info_input)
+          }
+          if (parames.local_protected_input) {
+            this.$set(this.ongoingList[index], 'local_protected', parames.local_protected_input)
+          }
+          if (parames.remote_protected_input) {
+            this.$set(this.ongoingList[index], 'remote_protected', parames.remote_protected_input)
+          }
+          if (parames.status) {
+            this.$set(this.ongoingList[index], 'status', parames.status)
+          }
+        }
+      }
     },
+
     methods: {
       handlerReceive() {
         Toast("领取任务！");
@@ -125,6 +145,7 @@
       // tab 改变事件
       changeTab(index, title) {
         this.searchParames.type = index
+
         this.currentTab = index
       },
       onLoad() {
@@ -170,7 +191,6 @@
             this.completeFinisheAll = true
           }
         }
-
       },
       // 删除单条数据
       del(id) {

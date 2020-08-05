@@ -12,7 +12,7 @@
         </van-cell-group>
         <van-cell-group>
             <van-row class="mb_10 ml_10 mt_5">
-                <van-radio-group v-model="focusRadio" direction="horizontal">
+                <van-radio-group v-model="focusRadio" direction="horizontal" disabled>
                     <van-col span="12">
                         <van-radio name="1" shape="square" class="mt_8">
                             盯控干部：{{see_peason}}
@@ -21,14 +21,14 @@
                     <van-col span="12">
                         <van-radio name="2" shape="square">
                             <template>
-                                变更
+                                变更{{see_peason_change}}
                             </template>
                         </van-radio>
                     </van-col>
                 </van-radio-group>
             </van-row>
             <van-row class="mb_10 ml_10 mt_5">
-                <van-radio-group v-model="contactRadio" direction="horizontal">
+                <van-radio-group v-model="contactRadio" direction="horizontal" disabled>
                     <van-col span="12">
                         <van-radio name="1" shape="square" class="mt_8">
                             驻站联络：{{rallway_info}}
@@ -37,14 +37,14 @@
                     <van-col span="12">
                         <van-radio name="2" shape="square">
                             <template>
-                                变更
+                                变更{{rallway_info_change}}
                             </template>
                         </van-radio>
                     </van-col>
                 </van-radio-group>
             </van-row>
             <van-row class="mb_10 ml_10 mt_5">
-                <van-radio-group v-model="protectRadio" direction="horizontal">
+                <van-radio-group v-model="protectRadio" direction="horizontal" disabled>
                     <van-col span="12">
                         <van-radio name="1" shape="square" class="mt_8">
                             现场防护：{{local_protected}}
@@ -53,14 +53,14 @@
                     <van-col span="12">
                         <van-radio name="2" shape="square">
                             <template>
-                                变更
+                                变更{{local_protected_change}}
                             </template>
                         </van-radio>
                     </van-col>
                 </van-radio-group>
             </van-row>
             <van-row class="mb_10 ml_10 mt_5">
-                <van-radio-group v-model="distalRadio" direction="horizontal">
+                <van-radio-group v-model="distalRadio" direction="horizontal" disabled>
                     <van-col span="12">
                         <van-radio name="1" shape="square" class="mt_8">
                             远端防护:{{remote_protected}}
@@ -69,7 +69,7 @@
                     <van-col span="12">
                         <van-radio name="2" shape="square">
                             <template>
-                                变更
+                                变更{{remote_protected_change}}
                             </template>
                         </van-radio>
                     </van-col>
@@ -77,19 +77,20 @@
             </van-row>
         </van-cell-group>
         <van-cell-group title='作业地点' :border="true" style="margin-bottom: 10px;">
-            <van-cell title="区间（战场）" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
-            <van-cell title="起止里程" :value="detailData.main_peason" />
+            <van-cell title="区间（战场）" :value="detailData.task_location" />
+            <van-cell title="起止里程" :value="detailData.start_destination" />
         </van-cell-group>
         <van-cell-group title='作业时间' :border="true" style="margin-bottom: 10px;">
-            <van-cell title="起止时间" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
-            <van-cell title="计划入网时间" :value="detailData.main_peason" />
-            <van-cell title="计划出网时间" :value="detailData.main_peason" />
+            <van-cell title="计划开始时间" :value="formatTime(detailData.task_start_time)" />
+            <van-cell title="计划结束时间" :value="formatTime(detailData.task_end_time)" />
+            <van-cell title="计划入网时间" :value="formatTime(detailData.plan_net_in_time)" />
+            <van-cell title="计划出网时间" :value="formatTime(detailData.plan_net_out_time)" />
         </van-cell-group>
         <van-cell-group title='其他信息' :border="true" style="margin-bottom: 10px;">
-            <van-cell title="职工人数" :value="detailData.sys_code" :value-class='detailData.status>2?"red":""' />
-            <van-cell title="劳务工人数" :value="detailData.main_peason" />
-            <van-cell title="主要机具" :value="detailData.main_peason" />
-            <van-cell title="注意事项" label="描述信息" />
+            <van-cell title="职工人数" :value="detailData.other_peason_number+ detailData.peason_number" />
+            <van-cell title="劳务工人数" :value="detailData.other_peason_number" />
+            <van-cell title="主要机具" :value="detailData.main_task" />
+            <van-cell title="注意事项" :label="detailData.task_note" />
         </van-cell-group>
         <!-- <van-button class="applicant" type="info" size="large" @click='applicant'>{{ detailData.status | getText }}
         </van-button> -->
@@ -127,10 +128,14 @@
                 rallway_info: '',
                 local_protected: '',
                 remote_protected: '',
-                see_peason_input: '',
-                rallway_info_input: '',
-                local_protected_input: '',
-                remote_protected_input: '',
+                see_peason: '',
+                see_peason_change: '',
+                rallway_info: '',
+                rallway_info_change: '',
+                local_protected: '',
+                local_protected_change: '',
+                remote_protected: '',
+                remote_protected_change: '',
                 evaluate: '5'
             }
         },
@@ -158,6 +163,31 @@
             async getDetailInfo(id) {
                 const { result } = await getTaskDetail({ id })
                 this.detailData = result
+                console.log(this.detailData)
+                this.focusRadio = this.detailData.edit_person_json.see_peason_radio
+                this.contactRadio = this.detailData.edit_person_json.rallway_info_radio
+                this.protectRadio = this.detailData.edit_person_json.local_protected_radio
+                this.distalRadio = this.detailData.edit_person_json.remote_protected_radio
+                if (this.focusRadio == 2) {
+                    this.see_peason_change = this.detailData.edit_person_json.see_peason
+                } else {
+                    this.see_peason = this.detailData.edit_person_json.see_peason
+                }
+                if (this.contactRadio == 2) {
+                    this.rallway_info_change = this.detailData.edit_person_json.rallway_info
+                } else {
+                    this.rallway_info = this.detailData.edit_person_json.rallway_info
+                }
+                if (this.protectRadio == 2) {
+                    this.local_protected_change = this.detailData.edit_person_json.local_protected
+                } else {
+                    this.local_protected = this.detailData.edit_person_json.rallway_info
+                }
+                if (this.distalRadio == 2) {
+                    this.remote_protected_change = this.detailData.edit_person_json.remote_protected
+                } else {
+                    this.remote_protected = this.detailData.edit_person_json.remote_protected
+                }
             }
         },
         filters: {

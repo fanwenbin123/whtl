@@ -371,7 +371,18 @@
             message: res.msg,
             duration: 2000,
           })
-          this.$router.push({ path: '/' })
+          this.$router.push({
+            path: '/',
+            query: {
+              status: res.result.status,
+              id: this.id,
+              see_peason_input: this.focusRadio == 2 ? this.see_peason_input : '',
+              rallway_info_input: this.contactRadio == 2 ? this.rallway_info_input : '',
+              local_protected_input: this.protectRadio == 2 ? this.local_protected_input : '',
+              remote_protected_input: this.distalRadio == 2 ? this.remote_protected_input : ''
+            }
+          })
+
         })
       }
     },

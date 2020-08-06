@@ -105,3 +105,13 @@ export const modifyPassword = (data) => {
         data
     })
 }
+
+// 图片上传
+export const uploadImage = (data) => {
+    return request({
+        url: `${BaseUrl}/api.php/Index/uploadImage`,
+        method: 'post',
+        data
+    })
+}
+

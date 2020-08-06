@@ -106,7 +106,8 @@
 <script>
   import { Toast, Cell, CellGroup, Field, Button, Uploader, Form, Row, Col, Radio, RadioGroup } from "vant";
   import { BaiduMap, BmScale, BmGeolocation } from 'vue-baidu-map'
-  import { getSyscode } from "@/api";
+  import { getSyscode, uploadImage } from "@/api";
+  import BaseUrl from '@/utils/baseURL'
   import flowInfo from '@/utils/flowInfo'
   export default {
     name: 'AddInfo',
@@ -238,7 +239,7 @@
         let originWidth = img.width // 压缩后的宽
         let originHeight = img.height
         // let maxWidth = 750
-        let quality = 0.8
+        let quality = 1
         if (imgSize > 200 * 1024) {
           quality = 0.9// 压缩质量
         }
@@ -267,12 +268,19 @@
       },
       // 选择图片
       uploadChange(file, item) {
-        console.log(file, item)
         let that = this
         let img = new Image()
         img.src = file.content
         img.onload = function () {
-          that.ontpys(img, file.file.size)
+          let imageFile = that.ontpys(img, file.file.size)
+          uploadImage(imageFile).then(res => {
+            item.fileImageList.length = item.fileImageList.length - 1  // 删除base64 图片格式 采用后端返回的图片链接
+            item.fileImageList.push({
+              url: BaseUrl + res.result
+            })
+          })
+          // 此处可以将图片上传到服务器
+
         }
       },
       //获取入网流程
@@ -332,6 +340,7 @@
         })
       },
       submit() {
+        this.fileImageList.length = 0
         this.typeRow.map(item => {
           this.fileImageList.push(item.fileImageList)
         })

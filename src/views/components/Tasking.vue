@@ -76,6 +76,14 @@
                 </van-radio-group>
             </van-row>
         </van-cell-group>
+        <van-cell-group :title='`${imgCategoryTitle}提示信息`'>
+            <van-row class="inNetworkRow" v-for="(item, index) in typeRow" :key="index">
+                <div>{{item.text}}</div>
+            </van-row>
+            <van-cell title="其他" value="" />
+            <!-- <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200"
+                placeholder="请输入其他描述" show-word-limit /> -->
+        </van-cell-group>
         <van-cell-group title='作业地点' :border="true" style="margin-bottom: 10px;">
             <van-cell title="区间（战场）" :value="detailData.task_location" />
             <van-cell title="起止里程" :value="detailData.start_destination" />
@@ -101,6 +109,7 @@
     import { Toast, Cell, CellGroup, Image, Button, Radio, RadioGroup, Row, Col } from "vant";
     import { getTaskDetail } from "@/api";
     import { formatTime } from '@/utils/index'
+    import flowInfo from '@/utils/flowInfo'
     export default {
         name: "Tasking",
         components: {
@@ -136,15 +145,26 @@
                 local_protected_change: '',
                 remote_protected: '',
                 remote_protected_change: '',
-                evaluate: '5'
+                evaluate: '5',
+                status: '', // 当前状态
+                flowInfo,
+                typeRow: '',
+                imgCategoryTitle: ''
             }
         },
         created() {
             this.id = this.$route.query.id
             this.$route.meta.title = this.$route.query.title
-
+            this.status = this.$route.query.status
             this.getDetailInfo(this.id)
             this.rightClick()
+            let type = this.$route.query.title
+            if (type && this.status == 1) {
+                this.getInNetworkFlowInfo(type)
+            }
+            if (type && this.status == 3) {
+                this.getOutNetworkFlowInfo(type)
+            }
         },
         mounted() {
             // this.$nextTick(() => {
@@ -163,7 +183,6 @@
             async getDetailInfo(id) {
                 const { result } = await getTaskDetail({ id })
                 this.detailData = result
-                console.log(this.detailData)
                 this.focusRadio = this.detailData.edit_person_json.see_peason_radio
                 this.contactRadio = this.detailData.edit_person_json.rallway_info_radio
                 this.protectRadio = this.detailData.edit_person_json.local_protected_radio
@@ -188,7 +207,57 @@
                 } else {
                     this.remote_protected = this.detailData.edit_person_json.remote_protected
                 }
-            }
+            },
+            //获取入网流程
+            getInNetworkFlowInfo(type) {
+                switch (type) {
+                    case '巡道防胀':
+                        this.typeRow = this.flowInfo.patrolInNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.patrolInNetwork.groupTitle
+                        break;
+                    case '线路调查':
+                        this.typeRow = this.flowInfo.lineInNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.lineInNetwork.groupTitle
+                        break;
+                    case '排障':
+                        this.typeRow = this.flowInfo.troubleshootInNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.troubleshootInNetwork.groupTitle
+                        break;
+                    case '卸长轨':
+                        this.typeRow = this.flowInfo.unloadingLongTrackInNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.unloadingLongTrackInNetwork.groupTitle
+                        break;
+                    case '换轨':
+                        this.typeRow = this.flowInfo.changeTrackInNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.changeTrackInNetwork.groupTitle
+                        break;
+                }
+            },
+            //获取出网流程
+            getOutNetworkFlowInfo(type) {
+                switch (type) {
+                    case '巡道防胀':
+                        this.typeRow = this.flowInfo.patrolOutNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.patrolOutNetwork.groupTitle
+                        break;
+                    case '线路调查':
+                        this.typeRow = this.flowInfo.lineOutNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.lineOutNetwork.groupTitle
+                        break;
+                    case '排障':
+                        this.typeRow = this.flowInfo.troubleshootOutNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.troubleshootOutNetwork.groupTitle
+                        break;
+                    case '卸长轨':
+                        this.typeRow = this.flowInfo.unloadingLongTrackOutNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.unloadingLongTrackInNetwork.groupTitle
+                        break;
+                    case '换轨':
+                        this.typeRow = this.flowInfo.changeTrackOutNetwork.imgInfo
+                        this.imgCategoryTitle = this.flowInfo.changeTrackOutNetwork.groupTitle
+                        break;
+                }
+            },
         },
         filters: {
             getText(val) {
@@ -237,6 +306,12 @@
     }
 
     .evaluateRadio {
+        padding-left: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .inNetworkRow {
         padding-left: 10px;
         padding-top: 10px;
         padding-bottom: 10px;

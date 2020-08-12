@@ -102,8 +102,12 @@
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
     .isRemember {
         padding: 5px 5px 10px 5px
+    }
+
+    /deep/ .van-field__control {
+        height: 40px;
     }
 </style>

@@ -46,7 +46,7 @@ const router = new Router({
           name: 'report',
           component: () => import('@/views/report'),
           meta: {
-            rightTitle: '圈子',
+            rightTitle: '添加',
             title: '上报',
             leftArrow: false
           }
@@ -89,9 +89,31 @@ const router = new Router({
           component: () => import('@/views/components/Quanzi'),
           meta: {
             leftArrow: true,
+            title: '圈子',
+            preventGoBack: true
+          }
+        },
+        {
+          path: '/ReportInfo',
+          name: 'ReportInfo',
+          component: () => import('@/views/components/ReportInfo'),
+          meta: {
+            leftArrow: true,
+            title: '上报',
+            preventGoBack: true
+          }
+        },
+        {
+          path: '/QuanziList',
+          name: 'QuanziList',
+          component: () => import('@/views/QuanziList'),
+          meta: {
+            rightTitle: '添加',
+            leftArrow: false,
             title: '圈子'
           }
         },
+
         {
           path: '/password',
           name: 'password',

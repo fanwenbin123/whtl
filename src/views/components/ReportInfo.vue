@@ -1,9 +1,6 @@
 <template>
     <div class="content">
-        <van-cell-group title='上传照片'>
-            <van-row class="inNetworkRow">
-                <van-uploader class="uploade" v-model="fileList" :after-read="uploadChange" :max-count="4" multiple />
-            </van-row>
+        <van-cell-group title='其他描述'>
             <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200"
                 placeholder="请输入其他描述" show-word-limit />
         </van-cell-group>
@@ -11,28 +8,25 @@
         <baidu-map class="baidu-map" :zoom="zoom" :center="center" @ready="handler" @click='getPoint'
             ak='E7ab13781e2edee9fefc970748efb910'>
             <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
-                @locationSuccess="locationSuccess" @locationError='locationError'>
+                @locationSuccess="locationSuccess" @locationError="locationError">
             </bm-geolocation>
         </baidu-map>
         <van-button type="info" size="large" @click='submit'>提交</van-button>
     </div>
 </template>
 <script>
-    import { Toast, Cell, CellGroup, Field, Button, Uploader, Form, Row, Col } from "vant";
+    import { Toast, Cell, CellGroup, Field, Button, Form } from "vant";
     import { BaiduMap, BmScale, BmGeolocation } from 'vue-baidu-map'
     import { getSyscode } from "@/api";
     export default {
-        name: 'AddInfo',
+        name: 'ReportInfo',
         components: {
             [Toast.name]: Toast,
             [Cell.name]: Cell,
             [CellGroup.name]: CellGroup,
             [Field.name]: Field,
             [Button.name]: Button,
-            [Uploader.name]: Uploader,
             [Form.name]: Form,
-            [Row.name]: Row,
-            [Col.name]: Col,
             BaiduMap,
             BmScale,
             BmGeolocation,
@@ -44,7 +38,6 @@
                 id: '',
                 status: '',
                 fileList: [],
-                fileImageList: [], // 提交到后端的图片数据
                 center: { lng: 0, lat: 0 },
                 zoom: 15,//必须写上,自己因为忘记写一直无法自动定位
                 address: {},
@@ -61,7 +54,7 @@
         methods: {
             onClickHeardLeft() {
                 this.$eventBus.$on('onClickLeft', target => {
-                    this.$router.push({ path: '/QuanziList' })
+                    this.$router.push({ path: '/report' })
                 })
             },
             handler({ BMap, map }) {
@@ -83,7 +76,6 @@
                         var mk = new BMap.Marker(r.point);
                         map.addOverlay(mk);
                         map.panTo(r.point);
-                        // console.log(r);
                         // console.log('您的位置：'+r.point.lng+','+r.point.lat);
                         _this.point = r.point;
                         _this.address = r.address
@@ -101,7 +93,6 @@
                 this.address = {}
                 Toast('定位失败请稍后再试！')
             },
-
             getPoint(e) {    //点击地图获取一些信息，
                 let geocoder = new BMap.Geocoder();  //创建地址解析器的实例
                 geocoder.getLocation(e.point, rs => {
@@ -109,49 +100,6 @@
                     console.log(rs.addressComponents);//结构化的地址描述(object)
                 });
             },
-
-            // 压缩图片
-            ontpys(img, imgSize) {
-                let originWidth = img.width // 压缩后的宽
-                let originHeight = img.height
-                // let maxWidth = 750
-                let quality = 0.8
-                if (imgSize > 200 * 1024) {
-                    quality = 0.9// 压缩质量
-                }
-                let canvas = document.createElement('canvas')
-                let drawer = canvas.getContext('2d')
-                canvas.width = originWidth
-                canvas.height = originHeight
-                drawer.drawImage(img, 0, 0, originWidth, originHeight)
-                let base64 = canvas.toDataURL('image/jpeg', quality) // 压缩后的base64图片
-                let newFile = this.dataURLtoFile(base64, Date.parse(Date()) + '.jpg')
-                newFile = { content: base64, file: newFile }
-                return newFile
-            },
-
-            // base64转file
-            dataURLtoFile(dataurl, filename) {
-                let arr = dataurl.split(',')
-                let mime = arr[0].match(/:(.*?);/)[1]
-                let bstr = atob(arr[1])
-                let n = bstr.length
-                let u8arr = new Uint8Array(n)
-                while (n--) {
-                    u8arr[n] = bstr.charCodeAt(n)
-                }
-                return new File([u8arr], filename, { type: mime })
-            },
-            // 选择图片
-            uploadChange(file) {
-                let that = this
-                let img = new Image()
-                img.src = file.content
-                img.onload = function () {
-                    that.fileImageList.push(that.ontpys(img, file.file.size))
-                }
-            },
-
             submit() {
                 if (Object.keys(this.address).length === 0) {
                     Toast('请先获取定位信息')
@@ -163,18 +111,17 @@
                     remark: this.remark,
                     point: this.point,
                     address: this.address,
-                    imageList: this.fileImageList
                 }).then(res => {
                     Toast({
                         message: res.msg,
                         duration: 2000,
                     })
-                    this.$router.push({ path: '/QuanziList', query: { currentTab: 1 } })
+                    this.$router.push({ path: '/report', query: { currentTab: 1 } })
                 })
                 if (this.status == 9) {
                     this.$router.go(-1)
                 } else {
-                    this.$router.push({ path: '/QuanziList', query: { currentTab: 1 } })
+                    this.$router.push({ path: '/report', query: { currentTab: 1 } })
                 }
             }
         },

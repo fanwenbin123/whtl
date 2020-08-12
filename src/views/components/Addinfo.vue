@@ -161,6 +161,18 @@
           {
             id: '5',
             text: '换轨'
+          },
+          {
+            id: '6',
+            text: '车辆运输'
+          },
+          {
+            id: '7',
+            text: '驻地编组'
+          },
+          {
+            id: '8',
+            text: '基地编组'
           }
         ],
         typeRow: [],
@@ -306,6 +318,18 @@
             this.typeRow = this.flowInfo.changeTrackInNetwork.imgInfo
             this.imgCategoryTitle = this.flowInfo.changeTrackInNetwork.groupTitle
             break;
+          case '车辆运输':
+            this.typeRow = this.flowInfo.vehicleTransportationIn.imgInfo
+            this.imgCategoryTitle = this.flowInfo.vehicleTransportationIn.groupTitle
+            break;
+          case '驻地编组':
+            this.typeRow = this.flowInfo.stationMarshallingIn.imgInfo
+            this.imgCategoryTitle = this.flowInfo.stationMarshallingIn.groupTitle
+            break;
+          case '基地编组':
+            this.typeRow = this.flowInfo.baseOrganizationIn.imgInfo
+            this.imgCategoryTitle = this.flowInfo.baseOrganizationIn.groupTitle
+            break;
         }
       },
       //获取出网流程
@@ -330,6 +354,18 @@
           case '换轨':
             this.typeRow = this.flowInfo.changeTrackOutNetwork.imgInfo
             this.imgCategoryTitle = this.flowInfo.changeTrackOutNetwork.groupTitle
+            break;
+          case '车辆运输':
+            this.typeRow = this.flowInfo.vehicleTransportationOut.imgInfo
+            this.imgCategoryTitle = this.flowInfo.vehicleTransportationOut.groupTitle
+            break;
+          case '驻地编组':
+            this.typeRow = this.flowInfo.stationMarshallingOut.imgInfo
+            this.imgCategoryTitle = this.flowInfo.stationMarshallingOut.groupTitle
+            break;
+          case '基地编组':
+            this.typeRow = this.flowInfo.baseOrganizationOut.imgInfo
+            this.imgCategoryTitle = this.flowInfo.baseOrganizationOut.groupTitle
             break;
         }
       },

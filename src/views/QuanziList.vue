@@ -4,8 +4,8 @@
         </lg-header> -->
         <van-sticky :offset-top="45">
             <div class='buttonBox'>
-                <van-button type="primary" size='small' disabled>上报</van-button>
-                <van-button type="info" size='small' @click='rightClick'>圈子</van-button>
+                <van-button type="primary" size='small' @click='repotClick'>上报</van-button>
+                <van-button type="info" size='small' @click='rightClick' disabled>圈子</van-button>
             </div>
         </van-sticky>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -13,8 +13,8 @@
                 <van-cell :title="item.user_id" label="item.task_info">
                     <template #label>
                         <div>{{item.task_info}}</div>
-                        <!-- <van-image v-for="(item, imgIndex) in item.img.split(',')" width="100" height="100"
-                            :src="BaseUrl+item" :key="imgIndex" @click='handlerImage(index,imgIndex)' /> -->
+                        <van-image v-for="(item, imgIndex) in item.img.split(',')" width="100" height="100"
+                            :src="BaseUrl+item" :key="imgIndex" @click='handlerImage(index,imgIndex)' />
                         <div v-if="item.address">
                             <van-icon name="location-o" />
                             {{`${item.address.province}${item.address.city}${item.address.district}${item.address.street}${item.address.street_number}`}}
@@ -54,16 +54,17 @@
             }
         },
         created() {
-            this.rightHeardClick()
+            this.rightClick()
         },
         methods: {
-            rightHeardClick() {
+            rightClick() {
                 this.$eventBus.$on('onClickRight', target => {
-                    this.$router.push({ path: '/ReportInfo', query: { title: '上报', id: this.id, status: 12 } })
+                    this.$router.push({ path: '/Quanzi', query: { title: '圈子', id: this.id, status: 11 } })
                 })
             },
-            rightClick() {
-                this.$router.push({ path: '/QuanziList' })
+            repotClick() {
+                this.$router.push({ path: '/Report', query: { title: '上报', id: this.id, status: 12 } })
+                // this.$router.push({ path: '/ReportInfo', query: { title: '上报', id: this.id, status: 12 } })
             },
             handlerImage(index, imageIndex) {
                 let imgList = []
@@ -79,7 +80,7 @@
             },
 
             async getpyqList() {
-                let { result } = await getpyq({ page: this.page, status: 12 })
+                let { result } = await getpyq({ page: this.page, status: 11 })
                 this.list = [...result.data, ...this.list];
                 this.loading = false;
                 if (this.list.length >= result.total) {

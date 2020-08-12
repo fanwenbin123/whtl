@@ -8,7 +8,7 @@
 -->
 <template>
   <div>
-    <van-sticky offset-top="84">
+    <van-sticky offset-top="80">
       <van-search v-model="searchVal" show-action placeholder="请输入搜索关键词">
         <template #action>
           <div @click="onSearch">搜索</div>
@@ -131,6 +131,7 @@
         } else if (this.currentTab === 1) {
           this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status } })
         } else if (this.currentTab === 2) {
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status } })
           //  this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }
       },

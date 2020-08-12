@@ -5,7 +5,7 @@
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \whtl\src\components\layout\header.vue
---> 
+-->
 <template>
     <van-nav-bar :left-arrow="leftArrow" :left-text="leftText" :border="border" :fixed="fixed" :z-index="zIndex"
         @click-left="onClickLeft" @click-right="onClickRight">
@@ -72,8 +72,8 @@
         methods: {
             onClickLeft() {
                 if (this.leftArrow) {
-                    if (this.preventGoBack) {
-                        this.$emit('on-click-left');
+                    if (this.$route.meta.preventGoBack) {
+                        this.$eventBus.$emit('onClickLeft')
                     } else {
                         this.$router.go(-1);
                     }
@@ -89,6 +89,10 @@
     }
 </script>
 <style lang="scss" scoped>
+    .van-nav-bar {
+        height: 53px;
+    }
+
     /* .van-nav-bar__left{
     left: 0;
     .van-nav-bar__arrow{

@@ -212,10 +212,6 @@ const flowInfo = {
                 fileImageList: []
             },
             {
-                text: '④添乘干部到岗',
-                fileImageList: []
-            },
-            {
                 text: '⑤其他（酒测和指纹签到）',
                 fileImageList: []
             }

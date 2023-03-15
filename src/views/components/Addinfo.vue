@@ -3,7 +3,7 @@
     <van-field name="checkboxGroup" label="描述">
       <template #input>
         <van-radio-group v-model="radio" direction="horizontal">
-          <van-radio class="describeRadio" v-for="(item, index) in radioList" :key="index" :name="item.id">
+          <van-radio class="describeRadio" v-for="(item, index) in radioList" :key="index" :name="item.id" disabled>
             {{item.text}}</van-radio>
         </van-radio-group>
       </template>
@@ -100,7 +100,7 @@
     <baidu-map class="baidu-map" :zoom="zoom" :center="center" @ready="handler" ak='E7ab13781e2edee9fefc970748efb910'>
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
     </baidu-map>
-    <van-button type="info" size="large" @click='submit'>提交</van-button>
+    <van-button type="info" size="large" @click='submit' style="margin-bottom: 25px;">提交</van-button>
   </div>
 </template>
 <script>
@@ -136,7 +136,7 @@
         fileList: [],
         fileImageList: [], // 提交到后端的图片数据
         center: { lng: 0, lat: 0 },
-        zoom: 15,//必须写上,自己因为忘记写一直无法自动定位
+        zoom: 18,//必须写上,
         address: {},
         point: {},
         radio: '',
@@ -292,7 +292,6 @@
             })
           })
           // 此处可以将图片上传到服务器
-
         }
       },
       //获取入网流程

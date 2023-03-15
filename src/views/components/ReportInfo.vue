@@ -88,6 +88,7 @@
             locationSuccess(point, AddressComponent, marker) {
                 console.log(point.addressComponent)
                 this.address = point.addressComponent
+                this.address.street_number = point.addressComponent.streetNumber
             },
             locationError() {
                 this.address = {}

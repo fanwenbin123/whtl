@@ -27,6 +27,7 @@ service.interceptors.request.use(config => {
     config.data.token = TOKEN
     config.data = qs.stringify(config.data)
   } else {
+    // console.log(config.params['page'], 'page', JSON.stringify(config.params))
     config.params.token = TOKEN
   }
 

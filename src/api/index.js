@@ -19,6 +19,7 @@ export const checkToken = (data) => {
 }
 // 获取列表数据
 export const getIndex = (params) => {
+
     return request({
         url: `${BaseUrl}/api.php/index/getTask`,
         method: 'get',
@@ -110,6 +111,15 @@ export const modifyPassword = (data) => {
 export const uploadImage = (data) => {
     return request({
         url: `${BaseUrl}/api.php/Index/uploadImage`,
+        method: 'post',
+        data
+    })
+}
+
+//获取全部消息列表
+export const getAllPageList = (data) => {
+    return request({
+        url: `${BaseUrl}/api.php/Index/getAllMsg`,
         method: 'post',
         data
     })

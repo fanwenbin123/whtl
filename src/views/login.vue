@@ -1,13 +1,17 @@
 <template>
     <div class="container">
-        <lg-header :leftArrow="false" :titleType="1" title="任务管理-登陆"></lg-header>
-        <div class="content">
-            <van-field v-model="tel" placeholder="请输入手机号" :error-message="usertel" clearable />
-            <van-field v-model="password" type="password" placeholder="请输入密码(默认手机号码后6位)" :error-message="pass"
-                clearable />
+        <!-- <lg-header :leftArrow="false" :titleType="1" title="任务管理-登陆"></lg-header> -->
+        <div class="content loginBox" style="width: 80%;">
+            <div class="logobox">
+                <img :src="logo" alt="">
+                <h1 style="font-size: 14px;">武汉铁路工务大修段</h1>
+            </div>
+            <van-field label="账号:" v-model="tel" placeholder="请输入手机号" :error-message="usertel" clearable />
+            <van-field label="密码:" v-model="password" type="password" placeholder="请输入密码(默认手机号码后6位)"
+                :error-message="pass" clearable />
             <van-checkbox class="isRemember" v-model="checked" shape="square">记住密码</van-checkbox>
             <van-button type="primary" :loading="loading" loading-text="登录..." size="large" color="#0079fe"
-                :disabled="zhud" @click="login">
+                :disabled="zhud" @click="login" style="border-radius: 5px;">
                 登录
             </van-button>
         </div>
@@ -15,6 +19,7 @@
 </template>
 <script>
     import { Field, Button, Toast, Divider, Checkbox, CheckboxGroup } from 'vant'
+    import logo from "@/assets/img/logo.png";
     import { login } from "@/api";
     // import { setToken, getToken } from '@/utils/cookies'
     import { mapMutations, mapState } from 'vuex';
@@ -34,7 +39,8 @@
                 password: '',
                 zhud: false,
                 loading: false,
-                checked: true
+                checked: true,
+                logo
             }
         },
         computed: {
@@ -79,11 +85,10 @@
                     Toast('密码输入有误')
                     return
                 }
+                localStorage.setItem('userName', this.tel)
                 if (this.checked) {
-                    localStorage.setItem('userName', this.tel)
                     localStorage.setItem('password', this.password)
                 } else {
-                    localStorage.removeItem('userName')
                     localStorage.removeItem('password')
                 }
                 login({ mobile: this.tel, password: this.password }).then(res => {
@@ -104,10 +109,27 @@
 </script>
 <style lang="scss" scoped>
     .isRemember {
-        padding: 5px 5px 10px 5px
+        padding: 10px 5px 10px 5px
     }
 
     /deep/ .van-field__control {
         height: 40px;
+    }
+
+    /deep/ .van-field__label {
+        line-height: 40px;
+        width: 50px
+    }
+
+    .logobox {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 </style>

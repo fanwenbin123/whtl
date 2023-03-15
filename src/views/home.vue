@@ -4,24 +4,24 @@
       <van-tabs type="card" v-model="active" background="white" title-active-color="#fff" title-inactive-color="#0079fe"
         color="#0079fe" offset-top="51" sticky @change='changeTab'>
         <van-tab title="未领取">
-          <unclaimed v-model="keyword1" @loadFun="onLoad" @del='del' @search='search' :loading="loading"
-            :finished="finished" :listData="list" :currentTab="currentTab">
+          <unclaimed v-model="keyword1" @loadFun="onLoad" @onRefresh='onRefresh' @del='del' @search='search'
+            :loading="loading" :finished="finished" :listData="list" :currentTab="currentTab" :refreshing="refreshing">
           </unclaimed>
         </van-tab>
         <van-tab title="进行中">
-          <unclaimed v-model="keyword2" @loadFun="onLoad" @search='search' :loading="loading"
-            :finished="completeFinishing" :listData=" ongoingList" :currentTab="currentTab">
+          <unclaimed v-model="keyword2" @loadFun="onLoad" @onRefresh='onRefresh' @search='search' :loading="loading"
+            :finished="completeFinishing" :listData="ongoingList" :currentTab="currentTab" :refreshing="refreshing">
           </unclaimed>
           <!-- <Tasking></Tasking> -->
         </van-tab>
         <van-tab title="已完成">
-          <unclaimed v-model="keyword3" @loadFun="onLoad" @search='search' :loading="loading"
-            :finished="completeFinished" :listData="completeList" :currentTab="currentTab">
+          <unclaimed v-model="keyword3" @loadFun="onLoad" @onRefresh='onRefresh' @search='search' :loading="loading"
+            :finished="completeFinished" :listData="completeList" :currentTab="currentTab" :refreshing="refreshing">
           </unclaimed>
         </van-tab>
         <van-tab title="全部">
-          <unclaimed v-model="keyword4" @loadFun="onLoad" @search='search' :loading="loading"
-            :finished="completeFinisheAll" :listData="allList" :currentTab="currentTab">
+          <unclaimed v-model="keyword4" @loadFun="onLoad" @onRefresh='onRefresh' @search='search' :loading="loading"
+            :finished="completeFinisheAll" :listData="allList" :currentTab="currentTab" :refreshing="refreshing">
           </unclaimed>
         </van-tab>
       </van-tabs>
@@ -77,6 +77,7 @@
         completeFinishing: false,
         completeFinished: false,
         completeFinisheAll: false,
+        refreshing: false,
         active: 0,
         currentTab: 0,  // 当前选中的Tab,
         searchParames: {
@@ -96,10 +97,10 @@
       // }
     },
     watch: {
-      currentTab(val) {
-        this.searchParames.page = 0
+      // currentTab(val) {
+      //   this.searchParames.page = 1
 
-      },
+      // },
       // isChangeMsgNum() {
       //   if (this.$store.state.isPlayMusic === 1) {
       //     let audio = new Audio()
@@ -145,20 +146,41 @@
       // tab 改变事件
       changeTab(index, title) {
         this.searchParames.type = index
-
         this.currentTab = index
+        this.searchParames.page = 0
       },
-      onLoad() {
-        this.searchParames.page++
+      onLoad(page) {
+
         // 获取首页数据
-        this.getIndexData()
+        this.searchParames.page++
+        this.getIndexData(page)
       },
+      // // 切换tab获取首页数据
+      // async getChangeIndexData() {
+      //   let pamas = {
+      //     key: '',
+      //     type: this.currentTab,
+      //     page: 1,
+      //     token: localStorage.getItem('token')
+      //   }
+      //   const { result } = await getIndex(pamas)
+      //   this.setResult(result)
+      // },
       //  获取首页数据
-      async getIndexData() {
+      async getIndexData(page) {
         this.loading = true
+        if (page) {
+          this.searchParames.page = page.page
+        }
         const { result } = await getIndex(this.searchParames)
+        this.setResult(result)
+      },
+      setResult(result) {
         if (this.currentTab === 0) {
-          //console.log(result)
+          if (this.refreshing) {
+            this.list = [];
+            this.refreshing = false;
+          }
           result.data.map(item => {
             this.list.push(item)
           })
@@ -167,6 +189,10 @@
             this.finished = true
           }
         } else if (this.currentTab === 1) {
+          if (this.refreshing) {
+            this.ongoingList = [];
+            this.refreshing = false;
+          }
           result.data.map(item => {
             this.ongoingList.push(item)
           })
@@ -175,14 +201,23 @@
             this.completeFinishing = true
           }
         } else if (this.currentTab === 2) {
+          if (this.refreshing) {
+            this.completeList = [];
+            this.refreshing = false;
+          }
           this.loading = false;
           result.data.map(item => {
             this.completeList.push(item)
           })
+
           if (this.completeList.length >= result.total) {
             this.completeFinished = true
           }
         } else if (this.currentTab === 3) {
+          if (this.refreshing) {
+            this.allList = [];
+            this.refreshing = false;
+          }
           this.loading = false;
           result.data.map(item => {
             this.allList.push(item)
@@ -192,6 +227,7 @@
           }
         }
       },
+
       // 删除单条数据
       del(id) {
         this.list.splice(this.list.findIndex(item => item.id === id), 1)
@@ -219,6 +255,10 @@
         }, 5000)
 
       },
+      onRefresh() {
+        this.refreshing = true
+        this.onLoad({ page: 1 })
+      }
     },
     destroyed() {
       clearTimeout(this.timer)
@@ -243,5 +283,9 @@
       height: 100%;
       padding-top: 46px;
     }
+  }
+
+  .van-list__finished-text {
+    height: 200px;
   }
 </style>

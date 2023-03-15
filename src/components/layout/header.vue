@@ -7,8 +7,14 @@
  * @FilePath: \whtl\src\components\layout\header.vue
 -->
 <template>
-    <van-nav-bar :left-arrow="leftArrow" :left-text="leftText" :border="border" :fixed="fixed" :z-index="zIndex"
-        @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar :left-text="leftText" :border="border" :fixed="fixed" :z-index="zIndex" @click-left="onClickLeft"
+        @click-right="onClickRight">
+        <div slot="left">
+            <van-icon name="arrow-left" v-if='leftArrow' @click-left="onClickLeft"></van-icon>
+            <a href="tel:02751132303" v-else>
+                <van-icon name="phone" color='red'> SOS</van-icon>
+            </a>
+        </div>
         <div slot="title">
             <span v-if="titleType == 1">{{title}}</span>
             <slot v-else name="title_slot"></slot>
@@ -21,10 +27,11 @@
 </template>
 
 <script>
-    import { NavBar } from 'vant';
+    import { NavBar, Icon } from 'vant';
     export default {
         components: {
             [NavBar.name]: NavBar,
+            [Icon.name]: Icon
         },
         props: {
             leftArrow: {                    //是否显示左侧箭头
@@ -90,7 +97,7 @@
 </script>
 <style lang="scss" scoped>
     .van-nav-bar {
-        height: 53px;
+        height: 50px;
     }
 
     /* .van-nav-bar__left{

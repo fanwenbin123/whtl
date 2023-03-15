@@ -15,37 +15,39 @@
         </template>
       </van-search>
     </van-sticky>
-    <van-list v-model="load" :finished="finishe" :finished-text="listData.length == 0?'无数据':'没有更多了'" @load="onLoad">
-      <van-cell-group v-for="item in listData" :key="item.id" :border="true" @click="handlerReceive(item)"
-        style="margin-bottom: 10px;">
-        <template>
-          <div class="group-title">
-            <div class="group-title-left">{{item.type}}</div>
-            <div class="group-title-right">{{item.grade_num}}</div>
-          </div>
-        </template>
-        <div class="main-peason">作业负责人: {{item.main_peason}}{{item.mobile}}</div>
-        <van-cell title="盯控干部" :value='item.see_peason' />
-        <van-cell title="驻站联络" :value='item.rallway_info' />
-        <van-cell title="现场防护" :value='item.local_protected' />
-        <van-cell title="远端防护" :value='item.remote_protected' />
-        <van-cell title="负责人" :value='item.main_peason' />
-        <van-cell title="操作" v-if="currentTab===1">
-          <template #right-icon>
-            <div class="operation">
-              <van-button type="primary" size="small" @click.stop='applyNetwork(item,2)' v-if='item.status==1'>
-                申请入网</van-button>
-              <van-button type="primary" size="small" @click.stop='applyNetwork(item,3)'
-                v-if='item.status==3 &&item.statics_mark == 1'>
-                申请出网</van-button>
-              <van-button type="primary" size="small"
-                v-if="(item.statics_mark==-1&&item.status==5)|| (item.statics_mark==-1&&item.status==3)"
-                @click.stop='rectification(item,4)'>整改措施</van-button>
+    <van-pull-refresh v-model="refresh" @refresh="onRefresh" success-text="刷新成功">
+      <van-list v-model="load" :finished="finishe" :finished-text="listData.length == 0?'无数据':'没有更多了'" @load="onLoad">
+        <van-cell-group v-for="item in listData" :key="item.id" :border="true" @click="handlerReceive(item)"
+          style="margin-bottom: 10px;">
+          <template>
+            <div class="group-title">
+              <div class="group-title-left">{{item.type}}</div>
+              <div class="group-title-right">{{item.grade_num}}</div>
             </div>
           </template>
-        </van-cell>
-      </van-cell-group>
-    </van-list>
+          <div class="main-peason">作业负责人: {{item.main_peason}}{{item.mobile}}</div>
+          <van-cell title="盯控干部" :value='item.see_peason' />
+          <van-cell title="驻站联络" :value='item.rallway_info' />
+          <van-cell title="现场防护" :value='item.local_protected' />
+          <van-cell title="远端防护" :value='item.remote_protected' />
+          <van-cell title="负责人" :value='item.main_peason' />
+          <van-cell title="操作" v-if="currentTab===1">
+            <template #right-icon>
+              <div class="operation">
+                <van-button type="primary" size="small" @click.stop='applyNetwork(item,2)' v-if='item.status==1'>
+                  申请入网</van-button>
+                <van-button type="primary" size="small" @click.stop='applyNetwork(item,3)'
+                  v-if='item.status==3 &&item.statics_mark == 1'>
+                  申请出网</van-button>
+                <van-button type="primary" size="small"
+                  v-if="(item.statics_mark==-1&&item.status==5)|| (item.statics_mark==-1&&item.status==3)"
+                  @click.stop='rectification(item,4)'>整改措施</van-button>
+              </div>
+            </template>
+          </van-cell>
+        </van-cell-group>
+      </van-list>
+    </van-pull-refresh>
     <van-dialog v-model="show" :title="detailInfo.type" @confirm='handlerConfirm(detailInfo.id)'
       confirm-button-text="领取" show-cancel-button>
       <van-cell title="车间" :value="detailInfo.grade_num" />
@@ -53,7 +55,7 @@
       <van-cell title="作业地点" :value='detailInfo.task_location' />
       <van-cell title="开始时间" :value='formatTime(detailInfo.task_start_time)' />
       <van-cell title="结束时间" :value='formatTime(detailInfo.task_end_time)' />
-      <van-cell title="施工类别" value="轨道车站区调作业" />
+      <van-cell title="施工类别" :value='detailInfo.task_type' />
       <van-cell title="负责人" :value='detailInfo.main_peason' />
       <van-cell title="盯防干部" :value='detailInfo.see_peason' />
       <van-cell title="作业命令号" value="**********" />
@@ -62,7 +64,7 @@
   </div>
 </template>
 <script>
-  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog, Button, Divider } from "vant";
+  import { Toast, Search, List, Cell, CellGroup, Tab, Tabs, Sticky, Dialog, Button, Divider, PullRefresh } from "vant";
   import { formatTime } from '@/utils/index'
   import { receiveTask, getSyscode } from "@/api";
   import { setToken, getToken } from '@/utils/cookies'
@@ -79,7 +81,8 @@
       [Sticky.name]: Sticky,
       [Button.name]: Button,
       [Divider.name]: Divider,
-      [Dialog.Component.name]: Dialog.Component
+      [Dialog.Component.name]: Dialog.Component,
+      [PullRefresh.name]: PullRefresh
     },
 
     props: {
@@ -100,6 +103,10 @@
       },
       currentTab: {
         type: Number
+      },
+      refreshing: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -111,7 +118,8 @@
         searchVal: '',
         show: false,
         detailInfo: {},
-        formatTime
+        formatTime,
+        refresh: false
       };
     },
     created() { },
@@ -129,15 +137,20 @@
           this.detailInfo = item
           this.show = true
         } else if (this.currentTab === 1) {
-          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status } })
+          console.log(item)
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status, detailInfo: item } })
         } else if (this.currentTab === 2) {
-          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status } })
+          this.$router.push({ path: '/taskingDetail', query: { id: item.id, title: item.type, status: item.status, detailInfo: item } })
           //  this.$router.push({ path: '/completedDetail', query: { id: item.id, title: item.type } })
         }
       },
       onLoad() {
         this.$emit("loadFun");
       },
+      onRefresh() {
+        this.$emit("onRefresh");
+      },
+
       // 确认领取任务
       handlerConfirm(id) {
         receiveTask({ id, token: localStorage.getItem('token') }).then(res => {
@@ -195,6 +208,11 @@
           this.searchVal = value
         },
         immediate: true
+      },
+      refreshing: {
+        handler(val) {
+          this.refresh = val;
+        }
       }
     },
   };

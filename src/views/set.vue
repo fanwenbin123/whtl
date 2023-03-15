@@ -1,6 +1,12 @@
 <template>
     <div class='content'>
         <van-cell-group>
+            <van-cell title="我的账号" :value='myAccount' />
+        </van-cell-group>
+        <van-cell-group>
+            <van-cell title="消息列表" is-link @click='handlerMsgListClick' />
+        </van-cell-group>
+        <van-cell-group>
             <van-cell title="修改密码" is-link @click='handlerClick' />
         </van-cell-group>
         <van-button type="default" size="large" @click="loginOut" class="loginOut">
@@ -28,11 +34,11 @@
         },
         data() {
             return {
-
+                myAccount: ''
             }
         },
         created() {
-
+            this.myAccount = localStorage.getItem('userName')
         },
         methods: {
             loginOut() {
@@ -47,6 +53,11 @@
             handlerClick() {
                 this.$router.push({
                     path: '/password'
+                })
+            },
+            handlerMsgListClick() {
+                this.$router.push({
+                    path: '/msgList'
                 })
             }
         },

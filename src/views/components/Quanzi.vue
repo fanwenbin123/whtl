@@ -2,7 +2,8 @@
     <div class="content">
         <van-cell-group title='上传照片'>
             <van-row class="inNetworkRow">
-                <van-uploader class="uploade" v-model="fileList" :after-read="uploadChange" :max-count="4" multiple />
+                <van-uploader class="uploade" v-model="fileList" :after-read="(e)=>uploadChange(e)" :max-count="4"
+                    multiple />
             </van-row>
             <van-field v-model="remark" rows="2" autosize label="其他" type="textarea" maxlength="200"
                 placeholder="请输入其他描述" show-word-limit />
@@ -20,7 +21,8 @@
 <script>
     import { Toast, Cell, CellGroup, Field, Button, Uploader, Form, Row, Col } from "vant";
     import { BaiduMap, BmScale, BmGeolocation } from 'vue-baidu-map'
-    import { getSyscode } from "@/api";
+    import { getSyscode, uploadImage } from "@/api";
+    import BaseUrl from '@/utils/baseURL'
     export default {
         name: 'AddInfo',
         components: {
@@ -46,9 +48,10 @@
                 fileList: [],
                 fileImageList: [], // 提交到后端的图片数据
                 center: { lng: 0, lat: 0 },
-                zoom: 15,//必须写上,自己因为忘记写一直无法自动定位
+                zoom: 18,//默认缩放比例
                 address: {},
                 point: {},
+                BaseUrl
             }
         },
         created() {
@@ -96,6 +99,7 @@
             locationSuccess(point, AddressComponent, marker) {
                 console.log(point.addressComponent)
                 this.address = point.addressComponent
+                this.address.street_number = point.addressComponent.streetNumber
             },
             locationError() {
                 this.address = {}
@@ -148,7 +152,13 @@
                 let img = new Image()
                 img.src = file.content
                 img.onload = function () {
-                    that.fileImageList.push(that.ontpys(img, file.file.size))
+                    let imageFile = that.ontpys(img, file.file.size)
+                    uploadImage(imageFile).then(res => {
+                        that.fileImageList.push({
+                            url: BaseUrl + res.result
+                        })
+                    })
+                    // 此处可以将图片上传到服务器
                 }
             },
 
@@ -169,13 +179,12 @@
                         message: res.msg,
                         duration: 2000,
                     })
-                    this.$router.push({ path: '/QuanziList', query: { currentTab: 1 } })
+                    if (this.status == 9) {
+                        this.$router.push({ path: '/home', query: { currentTab: 1 } })
+                    } else {
+                        this.$router.push({ path: '/QuanziList' })
+                    }
                 })
-                if (this.status == 9) {
-                    this.$router.go(-1)
-                } else {
-                    this.$router.push({ path: '/QuanziList', query: { currentTab: 1 } })
-                }
             }
         },
     }

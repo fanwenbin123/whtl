@@ -124,6 +124,16 @@ const router = new Router({
           }
 
         },
+        {
+          path: '/msgList',
+          name: 'msgList',
+          component: () => import('@/views//msgList'),
+          meta: {
+            title: '消息列表',
+            leftArrow: true
+          }
+
+        },
       ]
     },
 
